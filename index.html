@@ -3,53 +3,38 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>S3 Bucket Listing Generator</title>
-    
+    <title>S3 Bucket Listing Generator - Quality Automação</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
     <header id="navigation">
-        <h1>S3 Bucket Listing Generator</h1>
-        <p>
-            <a href="https://arquivo.qualityautomacao.com.br">https://arquivo.qualityautomacao.com.br</a> /
-        </p>
+        <div class="header-container">
+            <h1>S3 Bucket Listing Generator</h1>
+            <p class="breadcrumbs" id="breadcrumbs">
+                <a href="#">Home</a> /
+            </p>
+        </div>
     </header>
 
     <main id="listing-container">
+        <div class="search-box">
+            <input type="text" id="search-input" placeholder="Buscar nesta pasta...">
+        </div>
+
         <table id="listing-table">
             <thead>
                 <tr>
-                    <th>Key (Nome)</th>
-                    <th>Last Modified (Última Modificação)</th>
-                    <th>Size (Tamanho)</th>
+                    <th onclick="sortTable(0)">Nome <span class="sort-icon">▲</span></th>
+                    <th onclick="sortTable(1)">Última Modificação <span class="sort-icon"></span></th>
+                    <th onclick="sortTable(2)">Tamanho <span class="sort-icon"></span></th>
                 </tr>
             </thead>
             <tbody id="listing-body">
-                
-                <tr class="directory">
-                    <td><a href="#PDV/">PDV/</a></td>
-                    <td>-</td>
-                    <td>-</td>
+                <tr>
+                    <td colspan="3" class="loading-status">Carregando arquivos do servidor...</td>
                 </tr>
-                <tr class="directory">
-                    <td><a href="#Politicas/">Politicas/</a></td>
-                    <td>-</td>
-                    <td>-</td>
-                </tr>
-
-                <tr class="file">
-                    <td><a href="#QualityPosto.exe">QualityPosto.exe</a></td>
-                    <td>2025-07-01T12:49:40.000Z</td>
-                    <td>117.6 MB</td>
-                </tr>
-                <tr class="file">
-                    <td><a href="#ACBrNFeServicos.ini">ACBrNFeServicos.ini</a></td>
-                    <td>2020-08-19T17:45:44.000Z</td>
-                    <td>87.9 kB</td>
-                </tr>
-                
-                </tbody>
+            </tbody>
         </table>
     </main>
 
