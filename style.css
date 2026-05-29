@@ -1,22 +1,9 @@
-:root {
-  --bg-app: #09090b; --bg-surface: #18181b; --bg-hover: #27272a;
-  --text-primary: #fafafa; --text-secondary: #a1a1aa; --accent-blue: #3b82f6;
-  --border: #27272a;
-}
-
-body.light-mode {
-  --bg-app: #f4f4f5; --bg-surface: #ffffff; --bg-hover: #e4e4e7;
-  --text-primary: #18181b; --text-secondary: #71717a; --border: #d4d4d8;
-}
-
-body { background-color: var(--bg-app); color: var(--text-primary); font-family: 'Inter', sans-serif; transition: background 0.3s; }
-
-/* Breadcrumbs Pill */
-.bc-pill { background: var(--bg-surface); border: 1px solid var(--border); color: var(--text-primary); padding: 4px 12px; border-radius: 99px; cursor: pointer; font-size: 12px; }
+/* Dark/Light Mode */
+body.light-mode { --bg-app: #f4f4f5; --bg-surface: #ffffff; --text-primary: #18181b; --text-secondary: #71717a; --border: #e4e4e7; }
+/* Breadcrumb */
+.breadcrumb { margin-bottom: 20px; display: flex; gap: 8px; }
+.bc-pill { background: var(--bg-surface); border: 1px solid var(--border); color: var(--text-primary); padding: 4px 12px; border-radius: 6px; cursor: pointer; font-size: 13px; }
 .bc-pill:hover { border-color: var(--accent-blue); }
-
-/* Sublinhado Pastas */
+/* Sublinhado */
 .row-folder .row-label:hover { text-decoration: underline; color: var(--accent-blue); cursor: pointer; }
-
-.theme-toggle { background: var(--bg-surface); border: 1px solid var(--border); cursor: pointer; padding: 8px; border-radius: 8px; }
-/* ... mantenha o restante dos seus estilos originais abaixo ... */
+.theme-toggle { background: var(--bg-surface); border: 1px solid var(--border); padding: 8px; border-radius: 8px; cursor: pointer; }

@@ -4,7 +4,6 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Quality Automação — Dashboard</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
@@ -15,29 +14,16 @@
         <input id="search" type="text" placeholder="Buscar arquivos..." autocomplete="off" />
       </div>
       <div class="topbar-actions">
-        <button class="theme-toggle" onclick="toggleTheme()" title="Alternar Tema">🌓</button>
+        <button class="theme-toggle" onclick="toggleTheme()">🌓</button>
         <div class="badge-live"><div class="dot"></div> Online</div>
       </div>
     </header>
-
     <main class="main-content">
       <div class="content-wrapper">
         <div class="toolbar">
           <div class="breadcrumb" id="breadcrumb"></div>
-          <div class="filters">
-             <select id="sort-select" class="custom-select">
-              <option value="name">Nome A→Z</option>
-              <option value="name-desc">Nome Z→A</option>
-            </select>
-            <button class="btn-primary" id="refresh-btn" onclick="manualRefresh()">Atualizar</button>
-          </div>
         </div>
-        <div id="status-bar" class="status-bar"></div>
-        <div class="table-container">
-          <div class="table-header"><span>Nome</span><span>Tamanho</span><span>Modificado</span><span>Ação</span></div>
-          <div id="listing" class="table-body"></div>
-        </div>
-        <div class="pagination" id="pagination"></div>
+        <div id="listing" class="table-body"></div>
       </div>
     </main>
   </div>

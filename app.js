@@ -1,41 +1,31 @@
-const API_URL = 'https://ftp-qualityautomacao-frontend.onrender.com/api/arquivos';
-
-// Carregar tema salvo
+// Alternar Tema
 if (localStorage.getItem('theme') === 'light') document.body.classList.add('light-mode');
-
 function toggleTheme() {
   document.body.classList.toggle('light-mode');
   localStorage.setItem('theme', document.body.classList.contains('light-mode') ? 'light' : 'dark');
 }
 
-function navigate(path, updateHistory = true) {
+// Navegação (Interna para evitar 404)
+function navigate(path) {
   currentPath = path;
-  if (updateHistory) {
-    const url = path ? `?path=${encodeURIComponent(path)}` : window.location.pathname;
-    window.history.pushState({ path }, '', url);
-  }
+  currentPage = 1;
   render();
 }
 
-// Escuta botão voltar do navegador
-window.addEventListener('popstate', (e) => {
-  currentPath = e.state?.path || '';
-  render();
-});
-
-// Inicialização baseada na URL
-const params = new URLSearchParams(window.location.search);
-currentPath = params.get('path') || '';
-
+// Render Breadcrumb (Atualize sua função render() para incluir esta chamada)
 function renderBreadcrumb() {
-  const bc = document.getElementById('breadcrumb');
-  const parts = currentPath ? currentPath.split('/') : [];
+  const container = document.getElementById('breadcrumb');
+  if (!container) return;
   let html = `<button class="bc-pill" onclick="navigate('')">Raiz</button>`;
-  parts.forEach((p, i) => {
-    const path = parts.slice(0, i + 1).join('/');
-    html += ` ❯ <button class="bc-pill" onclick="navigate('${path}')">${p}</button>`;
-  });
-  bc.innerHTML = html;
+  if (currentPath) {
+    const parts = currentPath.split('/');
+    let acc = '';
+    parts.forEach((p) => {
+      acc = acc ? `${acc}/${p}` : p;
+      html += ` ❯ <button class="bc-pill" onclick="navigate('${acc}')">${p}</button>`;
+    });
+  }
+  container.innerHTML = html;
 }
 
-// ... (mantenha o restante das funções fetch e render, garantindo que chamem renderBreadcrumb())
+// IMPORTANTE: Adicione renderBreadcrumb() dentro da sua função render() original
