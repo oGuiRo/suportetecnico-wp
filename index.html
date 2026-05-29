@@ -1,43 +1,106 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Arquivos para download - Quality Automações</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quality Automação — Arquivo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@400;600;700&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
 </head>
+
 <body>
 
-    <header id="navigation">
-        <div class="header-container">
-            <h1>Arquivos para download - Quality Automações</h1>
-            <p class="breadcrumbs" id="breadcrumbs">
-                <a href="#">Home</a> /
-            </p>
-        </div>
-    </header>
+  <nav class="topbar">
+    <div class="logo">
+      <div class="logo-icon">📂</div>
+      Quality Automação · Arquivo
+    </div>
+    <div class="badge-live">
+      <div class="dot"></div>Ao vivo
+    </div>
+  </nav>
 
-    <main id="listing-container">
-        <div class="search-box">
-            <input type="text" id="search-input" placeholder="Buscar nesta pasta...">
-        </div>
+  <div class="container">
 
-        <table id="listing-table">
-            <thead>
-                <tr>
-                    <th onclick="sortTable(0)">Nome <span class="sort-icon">▲</span></th>
-                    <th onclick="sortTable(1)">Última Modificação <span class="sort-icon"></span></th>
-                    <th onclick="sortTable(2)">Tamanho <span class="sort-icon"></span></th>
-                </tr>
-            </thead>
-            <tbody id="listing-body">
-                <tr>
-                    <td colspan="3" class="loading-status">Carregando arquivos do servidor...</td>
-                </tr>
-            </tbody>
-        </table>
-    </main>
+    <div class="stats">
+      <div class="stat">
+        <div class="stat-label">Arquivos</div>
+        <div class="stat-value accent" id="stat-count">—</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Tamanho total</div>
+        <div class="stat-value" id="stat-size">—</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Pastas</div>
+        <div class="stat-value" id="stat-folders">—</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Próx. atualização</div>
+        <div class="stat-value" id="stat-countdown">—</div>
+      </div>
+    </div>
 
-    <script src="script.js"></script>
+    <div class="controls">
+      <div class="search-wrap">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8" />
+          <path d="m21 21-4.35-4.35" />
+        </svg>
+        <input id="search" type="text" placeholder="Buscar arquivos..." />
+      </div>
+      <select id="sort-select">
+        <option value="name">Nome A→Z</option>
+        <option value="name-desc">Nome Z→A</option>
+        <option value="date-desc">Mais recente</option>
+        <option value="date-asc">Mais antigo</option>
+        <option value="size-desc">Maior tamanho</option>
+        <option value="size-asc">Menor tamanho</option>
+      </select>
+      <select id="interval-select">
+        <option value="15">15s</option>
+        <option value="30" selected>30s</option>
+        <option value="60">1 min</option>
+        <option value="300">5 min</option>
+      </select>
+      <button class="btn btn-refresh" id="refresh-btn" onclick="manualRefresh()">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+          <path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8" />
+          <path d="M21 3v5h-5" />
+        </svg>
+        Atualizar
+      </button>
+    </div>
+
+    <div class="breadcrumb" id="breadcrumb"></div>
+    <div class="status-bar" id="status-bar">
+      <span class="loader-ring"></span> Conectando...
+    </div>
+
+    <div class="panel">
+      <div class="panel-header">
+        <span>Nome</span>
+        <span>Tamanho</span>
+        <span>Modificado</span>
+        <span>Link</span>
+      </div>
+      <div id="listing">
+        <div class="state"><span class="loader-ring"></span> Carregando...</div>
+      </div>
+    </div>
+
+    <div class="pagination" id="pagination" style="display:none">
+      <button class="btn pg-btn" id="pg-prev" onclick="changePage(-1)">← Anterior</button>
+      <span class="pg-info" id="pg-info"></span>
+      <button class="btn pg-btn" id="pg-next" onclick="changePage(1)">Próxima →</button>
+    </div>
+
+  </div>
+
+  <script src="app.js"></script>
 </body>
+
 </html>
