@@ -2,7 +2,7 @@ const express = require('express');
 const cors = require('cors');
 
 const app = express();
-const PORT = 3001;
+const PORT = process.env.PORT || 3001;
 
 // URL real do XML do S3 (descoberta no index.html do bucket)
 const S3_XML_URL = 'https://s3.amazonaws.com/arquivo.qualityautomacao.com.br';
