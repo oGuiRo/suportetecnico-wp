@@ -279,3 +279,26 @@ document.getElementById('interval-select').addEventListener('change', resetCount
 renderBreadcrumb();
 fetchData();
 resetCountdown();
+
+// Captura o botão e o elemento body
+const themeToggleBtn = document.getElementById('theme-toggle');
+const bodyElement = document.body;
+
+// 1. Verifica no localStorage se o usuário já escolheu o tema claro antes
+const savedTheme = localStorage.getItem('theme');
+if (savedTheme === 'light') {
+  bodyElement.classList.add('light-mode');
+}
+
+// 2. Adiciona a ação de clique no botão
+themeToggleBtn.addEventListener('click', () => {
+  // Alterna a classe (se tem, tira; se não tem, coloca)
+  bodyElement.classList.toggle('light-mode');
+  
+  // Salva a nova preferência no LocalStorage
+  if (bodyElement.classList.contains('light-mode')) {
+    localStorage.setItem('theme', 'light');
+  } else {
+    localStorage.setItem('theme', 'dark');
+  }
+});

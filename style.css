@@ -231,3 +231,39 @@ body {
   display: inline-block; width: 14px; height: 14px; border: 2px solid var(--border);
   border-top-color: var(--accent-blue); border-radius: 50%; animation: spin 0.8s linear infinite; vertical-align: middle;
 }
+
+/* ── BOTÃO DE TEMA ── */
+.btn-icon {
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  color: var(--text-primary);
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-icon:hover {
+  background: var(--bg-hover);
+  border-color: var(--border-hover);
+}
+
+/* ── TEMA CLARO (Aplicado via JavaScript) ── */
+body.light-mode {
+  --bg-app: #f4f4f5;
+  --bg-surface: #ffffff;
+  --bg-hover: #e4e4e7;
+  --border: #e4e4e7;
+  --border-hover: #d4d4d8;
+  
+  --text-primary: #18181b;
+  --text-secondary: #52525b;
+  --text-muted: #a1a1aa;
+  
+  --accent-blue: #2563eb;
+  --accent-green: #059669;
+}
