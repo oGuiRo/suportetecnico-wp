@@ -70,7 +70,20 @@ body {
   flex-shrink: 0;
 }
 
-.brand { display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 16px;}
+.brand { 
+  display: flex; 
+  align-items: center; 
+  gap: 10px; 
+  font-weight: 800; 
+  font-size: 16px;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.brand:hover {
+  opacity: 0.8;
+}
+
 .brand-icon { width: 170px; height: 100px; }
 .brand-icon img {
   width: 100%;
