@@ -1,4 +1,4 @@
-const API_URL = 'http://localhost:3001/api/arquivos';
+const API_URL = 'https://ftp-qualityautomacao-frontend.onrender.com';
 const PER_PAGE = 60;
 
 let allFiles = [];
