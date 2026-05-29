@@ -280,25 +280,36 @@ renderBreadcrumb();
 fetchData();
 resetCountdown();
 
-// Captura o botão e o elemento body
+// ── TEMA CLARO / ESCURO E LOGO ──────────────────────────────────────────────
 const themeToggleBtn = document.getElementById('theme-toggle');
 const bodyElement = document.body;
+const brandLogo = document.getElementById('brand-logo');
 
-// 1. Verifica no localStorage se o usuário já escolheu o tema claro antes
+// O uso do ./ garante que o GitHub Pages encontre a pasta corretamente
+const logoClara = './IMAGES/LogoPreta_WP.png';
+const logoEscura = './IMAGES/LogoBranca_WP.png';
+
+// 1. Verifica no localStorage na hora que a página carrega
 const savedTheme = localStorage.getItem('theme');
 if (savedTheme === 'light') {
   bodyElement.classList.add('light-mode');
+  if (brandLogo) brandLogo.src = logoClara;
+} else {
+  if (brandLogo) brandLogo.src = logoEscura;
 }
 
 // 2. Adiciona a ação de clique no botão
-themeToggleBtn.addEventListener('click', () => {
-  // Alterna a classe (se tem, tira; se não tem, coloca)
-  bodyElement.classList.toggle('light-mode');
-  
-  // Salva a nova preferência no LocalStorage
-  if (bodyElement.classList.contains('light-mode')) {
-    localStorage.setItem('theme', 'light');
-  } else {
-    localStorage.setItem('theme', 'dark');
-  }
-});
+if (themeToggleBtn) {
+  themeToggleBtn.addEventListener('click', () => {
+    bodyElement.classList.toggle('light-mode');
+    
+    // Salva a nova preferência e troca a logo instantaneamente
+    if (bodyElement.classList.contains('light-mode')) {
+      localStorage.setItem('theme', 'light');
+      if (brandLogo) brandLogo.src = logoClara;
+    } else {
+      localStorage.setItem('theme', 'dark');
+      if (brandLogo) brandLogo.src = logoEscura;
+    }
+  });
+}
