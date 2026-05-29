@@ -1,4 +1,4 @@
-const API_URL = 'https://arquivo.qualityautomacao.com.br/';
+const API_URL = 'https://ftp-qualityautomacao-frontend.onrender.com';
 const PER_PAGE = 60;
 
 let allFiles = [];
