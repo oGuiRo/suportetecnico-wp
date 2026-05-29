@@ -6,8 +6,6 @@ let currentPath = '';
 let prevKeys = new Set();
 let newKeys = new Set();
 let currentPage = 1;
-let countdown = 30;
-let cdTimer = null;
 
 // ── EXT CONFIG ───────────────────────────────────────────────────────────────
 const extCfg = {
@@ -55,7 +53,7 @@ function formatDate(s) {
   } catch { return s; }
 }
 
-// ── NAVEGAÇÃO ────────────────────────────────────────────────────────────────
+// ── NAVEGAÇÃO E HISTÓRICO DA URL ─────────────────────────────────────────────
 function getView(files, path, query) {
   if (query) {
     const q = query.toLowerCase();
@@ -87,12 +85,34 @@ function sortItems(files) {
   });
 }
 
-function navigate(path) {
+function navigate(path, saveHistory = true) {
   currentPath = path;
   currentPage = 1;
   document.getElementById('search').value = '';
+  
+  if (saveHistory) {
+    try {
+      const url = new URL(window.location);
+      if (path) {
+        url.searchParams.set('path', path);
+      } else {
+        url.searchParams.delete('path');
+      }
+      window.history.pushState({ path: path }, '', url);
+    } catch (err) {
+      // Ignora silenciosamente quando roda em file:/// localmente
+      console.log("Navegando na pasta:", path);
+    }
+  }
+  
   render();
 }
+
+// Detecta quando o usuário clica no botão Voltar/Avançar do próprio navegador
+window.addEventListener('popstate', (event) => {
+  const savedPath = event.state ? event.state.path : '';
+  navigate(savedPath, false); // false para não registrar no histórico de novo
+});
 
 // ── RENDER ───────────────────────────────────────────────────────────────────
 function renderBreadcrumb() {
@@ -226,9 +246,9 @@ async function fetchData() {
     const novosPill = newKeys.size > 0
       ? `<span class="new-pill">+${newKeys.size} novo${newKeys.size > 1 ? 's' : ''}</span>`
       : '';
+      
     setStatus(`Atualizado às <span class="hi">${hora}</span>
     &nbsp;·&nbsp; ${data.total} arquivos
-    &nbsp;<span class="cd-pill" id="cd-pill">—</span>
     ${novosPill}`);
 
     if (newKeys.size > 0) setTimeout(() => { newKeys = new Set(); render(); }, 5000);
@@ -244,25 +264,35 @@ async function fetchData() {
   }
 }
 
-// ── COUNTDOWN ────────────────────────────────────────────────────────────────
-function resetCountdown() {
-  if (cdTimer) clearInterval(cdTimer);
-  const iv = parseInt(document.getElementById('interval-select').value);
-  countdown = iv;
-  document.getElementById('stat-countdown').textContent = iv + 's';
+// ── ATUALIZAÇÃO DIÁRIA (06:00 AM) ────────────────────────────────────────────
+function scheduleDailyUpdate() {
+  const now = new Date();
+  const nextUpdate = new Date();
+  
+  // Define o horário para 06:00:00 de hoje
+  nextUpdate.setHours(6, 0, 0, 0);
 
-  cdTimer = setInterval(() => {
-    countdown--;
-    const pill = document.getElementById('cd-pill');
-    if (pill) pill.textContent = countdown + 's';
-    document.getElementById('stat-countdown').textContent = countdown + 's';
-    if (countdown <= 0) { countdown = iv; fetchData(); }
-  }, 1000);
+  // Se o horário atual já passou das 06:00 de hoje, agenda para as 06:00 de amanhã
+  if (now.getTime() >= nextUpdate.getTime()) {
+    nextUpdate.setDate(nextUpdate.getDate() + 1);
+  }
+
+  // Calcula a diferença em milissegundos
+  const timeUntilNext = nextUpdate.getTime() - now.getTime();
+
+  // Cria o agendamento
+  setTimeout(() => {
+    fetchData(); // Atualiza a lista
+    scheduleDailyUpdate(); // Reagenda o próximo ciclo para o dia seguinte
+  }, timeUntilNext);
+
+  // Atualiza visualmente o card no Dashboard
+  const statCountdown = document.getElementById('stat-countdown');
+  if (statCountdown) statCountdown.textContent = '06:00';
 }
 
 function manualRefresh() {
-  countdown = parseInt(document.getElementById('interval-select').value);
-  fetchData();
+  fetchData(); 
 }
 
 function changePage(d) {
@@ -274,22 +304,29 @@ function changePage(d) {
 // ── INIT ─────────────────────────────────────────────────────────────────────
 document.getElementById('search').addEventListener('input', () => { currentPage = 1; render(); });
 document.getElementById('sort-select').addEventListener('change', () => { currentPage = 1; render(); });
-document.getElementById('interval-select').addEventListener('change', resetCountdown);
+
+// Lê a URL na hora que entra no site
+try {
+  const urlParams = new URLSearchParams(window.location.search);
+  currentPath = urlParams.get('path') || '';
+  window.history.replaceState({ path: currentPath }, '', window.location.href);
+} catch (err) {
+  // Ignora o erro se estiver rodando o arquivo localmente
+  currentPath = '';
+}
 
 renderBreadcrumb();
 fetchData();
-resetCountdown();
+scheduleDailyUpdate();
 
 // ── TEMA CLARO / ESCURO E LOGO ──────────────────────────────────────────────
 const themeToggleBtn = document.getElementById('theme-toggle');
 const bodyElement = document.body;
 const brandLogo = document.getElementById('brand-logo');
 
-// O uso do ./ garante que o GitHub Pages encontre a pasta corretamente
 const logoClara = './IMAGES/LogoPreta_WP.png';
 const logoEscura = './IMAGES/LogoBranca_WP.png';
 
-// 1. Verifica no localStorage na hora que a página carrega
 const savedTheme = localStorage.getItem('theme');
 if (savedTheme === 'light') {
   bodyElement.classList.add('light-mode');
@@ -298,12 +335,9 @@ if (savedTheme === 'light') {
   if (brandLogo) brandLogo.src = logoEscura;
 }
 
-// 2. Adiciona a ação de clique no botão
 if (themeToggleBtn) {
   themeToggleBtn.addEventListener('click', () => {
     bodyElement.classList.toggle('light-mode');
-    
-    // Salva a nova preferência e troca a logo instantaneamente
     if (bodyElement.classList.contains('light-mode')) {
       localStorage.setItem('theme', 'light');
       if (brandLogo) brandLogo.src = logoClara;
