@@ -14,10 +14,9 @@
 
   <div class="app-container">
     
-    <!-- CABEÇALHO SUPERIOR -->
     <header class="topbar">
-      <div class="brand">
-        <div class="brand-icon"><img id="brand-logo" src="IMAGES/LogoBranca_WP.png" alt="Logotipo da Quality Automação" /></div>
+      <div class="brand" title="Voltar para o início">
+        <div class="brand-icon"><img id="brand-logo" src="./IMAGES/LogoBranca_WP.png" alt="Logotipo da Quality Automação" /></div>
         <div class="brand-text">Arquivos FTP Quality</div>
       </div>
 
@@ -27,22 +26,20 @@
       </div>
       
       <div class="topbar-actions">
-  <div class="credits">Desenvolvido por <strong>Guilherme Rodrigues</strong></div>
-  
-  <button id="theme-toggle" class="btn-icon" title="Alternar tema">
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
-    </svg>
-  </button>
-  <div class="badge-live"><div class="dot"></div> Online</div>
-</div>
+        <div class="credits">Desenvolvido por <strong>Guilherme Rodrigues</strong></div>
+        
+        <button id="theme-toggle" class="btn-icon" title="Alternar tema">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+          </svg>
+        </button>
+        <div class="badge-live"><div class="dot"></div> Online</div>
+      </div>
     </header>
 
-    <!-- CONTEÚDO PRINCIPAL -->
     <main class="main-content">
       <div class="content-wrapper">
         
-        <!-- CARDS DE ESTATÍSTICAS -->
         <div class="stats-grid">
           <div class="stat-card">
             <div class="stat-title">Total de Arquivos</div>
@@ -62,7 +59,6 @@
           </div>
         </div>
 
-        <!-- BARRA DE FERRAMENTAS -->
         <div class="toolbar">
           <div class="breadcrumb" id="breadcrumb"></div>
           
@@ -82,12 +78,10 @@
           </div>
         </div>
 
-        <!-- BARRA DE STATUS INFERIOR -->
         <div class="status-bar" id="status-bar">
           <span class="loader-ring"></span> Conectando ao servidor...
         </div>
 
-        <!-- TABELA DE ARQUIVOS -->
         <div class="table-container">
           <div class="table-header">
             <span>Nome do Arquivo</span>
@@ -100,7 +94,6 @@
           </div>
         </div>
 
-        <!-- PAGINAÇÃO -->
         <div class="pagination" id="pagination" style="display:none">
           <button class="btn-page" id="pg-prev" onclick="changePage(-1)">Anterior</button>
           <span class="pg-info" id="pg-info"></span>
