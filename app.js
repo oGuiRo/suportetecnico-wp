@@ -94,11 +94,11 @@ function navigate(path, saveHistory = true) {
     try {
       if (path) {
         // Se estiver entrando em uma pasta, adiciona o ?path=...
-        const url = new URL(window.location);
+        const url = new URL(window.location.href);
         url.searchParams.set('path', path);
-        window.history.pushState({ path: path }, '', url);
+        window.history.pushState({ path: path }, '', url.toString());
       } else {
-        // Se estiver voltando para a raiz (clique na logo), limpa a URL completamente!
+        // Se estiver voltando para a raiz (clique na logo), limpa a URL completamente usando pathname
         window.history.pushState({ path: '' }, '', window.location.pathname);
       }
     } catch (err) {
@@ -192,4 +192,152 @@ function render() {
     return;
   }
 
-  listing
+  listing.innerHTML = page.map(row =>
+    row.type === 'folder' ? renderFolderRow(row.name) : renderFileRow(row.data)
+  ).join('');
+
+  if (totalPages > 1) {
+    pagination.style.display = 'flex';
+    document.getElementById('pg-info').textContent = `Pág ${currentPage}/${totalPages} · ${totalItems} itens`;
+    document.getElementById('pg-prev').disabled = currentPage === 1;
+    document.getElementById('pg-next').disabled = currentPage === totalPages;
+  } else {
+    pagination.style.display = 'none';
+  }
+
+  renderBreadcrumb();
+}
+
+// ── STATS ────────────────────────────────────────────────────────────────────
+function updateStats() {
+  document.getElementById('stat-count').textContent = allFiles.length;
+  const total = allFiles.reduce((s, f) => s + f.tamanho, 0);
+  document.getElementById('stat-size').textContent = formatSize(total);
+  const rootFolders = new Set(
+    allFiles.map(f => f.key.includes('/') ? f.key.split('/')[0] : null).filter(Boolean)
+  );
+  document.getElementById('stat-folders').textContent = rootFolders.size;
+}
+
+// ── STATUS BAR ───────────────────────────────────────────────────────────────
+function setStatus(html) {
+  document.getElementById('status-bar').innerHTML = html;
+}
+
+// ── FETCH ────────────────────────────────────────────────────────────────────
+async function fetchData() {
+  const btn = document.getElementById('refresh-btn');
+  btn.classList.add('spinning');
+  try {
+    const res = await fetch(API_URL);
+    if (!res.ok) throw new Error(`Servidor retornou ${res.status}`);
+    const data = await res.json();
+    if (data.erro) throw new Error(data.erro);
+
+    const currentKeys = new Set(data.arquivos.map(f => f.key));
+    newKeys = new Set([...currentKeys].filter(k => !prevKeys.has(k) && prevKeys.size > 0));
+    prevKeys = currentKeys;
+    allFiles = data.arquivos;
+
+    updateStats();
+    render();
+
+    const hora = new Date().toLocaleTimeString('pt-BR');
+    const novosPill = newKeys.size > 0
+      ? `<span class="new-pill">+${newKeys.size} novo${newKeys.size > 1 ? 's' : ''}</span>`
+      : '';
+      
+    setStatus(`Atualizado às <span class="hi">${hora}</span>
+    &nbsp;·&nbsp; ${data.total} arquivos
+    ${novosPill}`);
+
+    if (newKeys.size > 0) setTimeout(() => { newKeys = new Set(); render(); }, 5000);
+  } catch (err) {
+    document.getElementById('listing').innerHTML = `
+    <div class="error-box">
+      <strong>⚠ Não foi possível conectar ao servidor.</strong><br>
+      Erro: <code>${err.message}</code>
+    </div>`;
+    setStatus('⚠ Erro de conexão');
+  } finally {
+    btn.classList.remove('spinning');
+  }
+}
+
+// ── ATUALIZAÇÃO DIÁRIA (06:00 AM) ────────────────────────────────────────────
+function scheduleDailyUpdate() {
+  const now = new Date();
+  const nextUpdate = new Date();
+  
+  nextUpdate.setHours(6, 0, 0, 0);
+
+  if (now.getTime() >= nextUpdate.getTime()) {
+    nextUpdate.setDate(nextUpdate.getDate() + 1);
+  }
+
+  const timeUntilNext = nextUpdate.getTime() - now.getTime();
+
+  setTimeout(() => {
+    fetchData(); 
+    scheduleDailyUpdate(); 
+  }, timeUntilNext);
+
+  const statCountdown = document.getElementById('stat-countdown');
+  if (statCountdown) statCountdown.textContent = '06:00';
+}
+
+function manualRefresh() {
+  fetchData(); 
+}
+
+function changePage(d) {
+  currentPage += d;
+  render();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ── INIT ─────────────────────────────────────────────────────────────────────
+document.getElementById('search').addEventListener('input', () => { currentPage = 1; render(); });
+document.getElementById('sort-select').addEventListener('change', () => { currentPage = 1; render(); });
+
+try {
+  const urlParams = new URLSearchParams(window.location.search);
+  currentPath = urlParams.get('path') || '';
+  window.history.replaceState({ path: currentPath }, '', window.location.href);
+} catch (err) {
+  currentPath = '';
+}
+
+renderBreadcrumb();
+fetchData();
+scheduleDailyUpdate();
+
+// ── TEMA CLARO / ESCURO E LOGO ──────────────────────────────────────────────
+const themeToggleBtn = document.getElementById('theme-toggle');
+const bodyElement = document.body;
+const brandLogo = document.getElementById('brand-logo');
+
+const logoClara = './IMAGES/LogoPreta_WP.png';
+const logoEscura = './IMAGES/LogoBranca_WP.png';
+
+const savedTheme = localStorage.getItem('theme');
+if (savedTheme === 'light') {
+  bodyElement.classList.add('light-mode');
+  if (brandLogo) brandLogo.src = logoClara;
+} else {
+  if (brandLogo) brandLogo.src = logoEscura;
+}
+
+if (themeToggleBtn) {
+  themeToggleBtn.addEventListener('click', () => {
+    bodyElement.classList.toggle('light-mode');
+    
+    if (bodyElement.classList.contains('light-mode')) {
+      localStorage.setItem('theme', 'light');
+      if (brandLogo) brandLogo.src = logoClara;
+    } else {
+      localStorage.setItem('theme', 'dark');
+      if (brandLogo) brandLogo.src = logoEscura;
+    }
+  });
+}
