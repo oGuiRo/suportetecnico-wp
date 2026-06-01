@@ -3,10 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Suporte Quality</title>
+  <title>Consultar NFC-e — Quality Automação</title>
   <link rel="icon" type="image/png" href="./IMAGES/BrasãoAba.png" />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="style.css" />
 </head>
@@ -63,95 +61,50 @@
     </aside>
 
     <div class="app-container">
-      
       <header class="topbar">
-        <div class="brand" onclick="navigate('')" title="Voltar para o início">
-          <div class="brand-icon"><img id="brand-logo" src="./IMAGES/LogoBranca_WP.png" alt="Logotipo da Quality Automação" /></div>
-          <div class="brand-text">Arquivos FTP Quality</div>
-        </div>
-
-        <div class="search-bar">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.35-4.35"></path></svg>
-          <input id="search" type="text" placeholder="Buscar arquivos no servidor..." autocomplete="off" />
+        <div class="brand" onclick="window.location.href='index.html'" title="Voltar para o Início">
+          <div class="brand-icon"><img id="brand-logo" src="./IMAGES/LogoPreta_WP.png" alt="Logotipo da Quality Automação" /></div>
+          <div class="brand-text">Roteador Inteligente NFC-e</div>
         </div>
         
         <div class="topbar-actions">
           <div class="credits">Desenvolvido por <strong>Guilherme Rodrigues</strong></div>
-          
           <button id="theme-toggle" class="btn-icon" title="Alternar tema">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
             </svg>
           </button>
-          <div class="badge-live"><div class="dot"></div> Online</div>
         </div>
       </header>
 
       <main class="main-content">
-        <div class="content-wrapper">
+        <div class="content-wrapper" style="max-width: 600px; margin-top: 40px;">
           
-          <div class="stats-grid">
-            <div class="stat-card">
-              <div class="stat-title">Total de Arquivos</div>
-              <div class="stat-value text-blue" id="stat-count">—</div>
-            </div>
-            <div class="stat-card">
-              <div class="stat-title">Armazenamento</div>
-              <div class="stat-value" id="stat-size">—</div>
-            </div>
-            <div class="stat-card">
-              <div class="stat-title">Diretórios</div>
-              <div class="stat-value" id="stat-folders">—</div>
-            </div>
-            <div class="stat-card">
-              <div class="stat-title">Atualiza às</div>
-              <div class="stat-value text-green" id="stat-countdown">—</div>
-            </div>
-          </div>
+          <div class="stat-card" style="padding: 32px;">
+            <h2 style="margin-bottom: 8px; color: var(--text-primary);">Consulta Rápida de NFC-e</h2>
+            <p style="color: var(--text-secondary); font-size: 14px; margin-bottom: 24px;">
+              Cole a Chave de Acesso (44 dígitos). O sistema identificará automaticamente o estado e abrirá o portal correto da Sefaz.
+            </p>
 
-          <div class="toolbar">
-            <div class="breadcrumb" id="breadcrumb"></div>
-            
-            <div class="filters">
-              <select id="sort-select" class="custom-select">
-                <option value="name">Nome A→Z</option>
-                <option value="name-desc">Nome Z→A</option>
-                <option value="date-desc">Mais recente</option>
-                <option value="date-asc">Mais antigo</option>
-                <option value="size-desc">Maior tamanho</option>
-                <option value="size-asc">Menor tamanho</option>
-              </select>
-              <button class="btn-primary" id="refresh-btn" onclick="manualRefresh()">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"></path><path d="M21 3v5h-5"></path></svg>
-                Atualizar
+            <div style="display: flex; flex-direction: column; gap: 16px;">
+              <div>
+                <label style="display: block; font-size: 13px; font-weight: 500; margin-bottom: 8px; color: var(--text-primary);">Chave de Acesso</label>
+                <input type="text" id="chave-nfce" maxlength="44" placeholder="Ex: 32230912345678901234650010001234561234567890" style="width: 100%; padding: 12px; background: var(--bg-app); border: 1px solid var(--border); border-radius: var(--radius-md); color: var(--text-primary); font-family: 'JetBrains Mono', monospace; font-size: 13px;" />
+              </div>
+
+              <button id="btn-consultar-nfce" class="btn-primary" style="width: 100%; justify-content: center; padding: 12px; margin-top: 8px; font-size: 14px;">
+                🔍 Redirecionar para a Sefaz Correta
               </button>
-            </div>
-          </div>
 
-          <div class="status-bar" id="status-bar">
-            <span class="loader-ring"></span> Conectando ao servidor...
-          </div>
-
-          <div class="table-container">
-            <div class="table-header">
-              <span>Nome do Arquivo</span>
-              <span>Tamanho</span>
-              <span>Última Modificação</span>
-              <span>Ação</span>
+              <div id="nfce-msg" style="margin-top: 16px; font-size: 14px; text-align: center; font-weight: 500;"></div>
             </div>
-            <div id="listing" class="table-body">
-              <div class="state"><span class="loader-ring"></span> Carregando dados...</div>
-            </div>
-          </div>
-
-          <div class="pagination" id="pagination" style="display:none">
-            <button class="btn-page" id="pg-prev" onclick="changePage(-1)">Anterior</button>
-            <span class="pg-info" id="pg-info"></span>
-            <button class="btn-page" id="pg-next" onclick="changePage(1)">Próxima</button>
           </div>
 
         </div>
       </main>
-    </div> </div> <script src="app.js?v=2"></script>
+    </div>
+  </div>
+
+  <script src="nfce.js"></script>
 </body>
 </html>
