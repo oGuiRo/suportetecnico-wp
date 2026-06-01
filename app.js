@@ -1,3 +1,55 @@
+// ── 1. TEMA CLARO / ESCURO E LOGO (PRIORIDADE) ──────────────────────────────
+const themeToggleBtn = document.getElementById('theme-toggle');
+const bodyElement = document.body;
+const brandLogo = document.getElementById('brand-logo');
+
+const logoClara = './IMAGES/LogoPreta_WP.png';
+const logoEscura = './IMAGES/LogoBranca_WP.png';
+
+const savedTheme = localStorage.getItem('theme');
+if (savedTheme === 'light') {
+  bodyElement.classList.add('light-mode');
+  if (brandLogo) brandLogo.src = logoClara;
+} else {
+  if (brandLogo) brandLogo.src = logoEscura;
+}
+
+if (themeToggleBtn) {
+  themeToggleBtn.addEventListener('click', () => {
+    bodyElement.classList.toggle('light-mode');
+    
+    if (bodyElement.classList.contains('light-mode')) {
+      localStorage.setItem('theme', 'light');
+      if (brandLogo) brandLogo.src = logoClara;
+    } else {
+      localStorage.setItem('theme', 'dark');
+      if (brandLogo) brandLogo.src = logoEscura;
+    }
+  });
+}
+
+// ── 2. SIDEBAR TOGGLE (MENU LATERAL) ────────────────────────────────────────
+const sidebar = document.getElementById('sidebar');
+const sidebarToggle = document.getElementById('sidebar-toggle');
+
+const sidebarState = localStorage.getItem('sidebarState');
+if (sidebarState === 'expanded') {
+  if (sidebar) sidebar.classList.remove('collapsed');
+}
+
+if (sidebarToggle && sidebar) {
+  sidebarToggle.addEventListener('click', () => {
+    sidebar.classList.toggle('collapsed');
+    
+    if (sidebar.classList.contains('collapsed')) {
+      localStorage.setItem('sidebarState', 'collapsed');
+    } else {
+      localStorage.setItem('sidebarState', 'expanded');
+    }
+  });
+}
+
+// ── 3. LÓGICA DO FTP ────────────────────────────────────────────────────────
 const API_URL = 'https://ftp-qualityautomacao-frontend.onrender.com/api/arquivos';
 const PER_PAGE = 60;
 
@@ -7,7 +59,6 @@ let prevKeys = new Set();
 let newKeys = new Set();
 let currentPage = 1;
 
-// ── EXT CONFIG ───────────────────────────────────────────────────────────────
 const extCfg = {
   exe: { bg: 'rgba(255,92,92,.15)', color: '#ff7070', label: 'EXE' },
   msi: { bg: 'rgba(255,92,92,.15)', color: '#ff7070', label: 'MSI' },
@@ -30,7 +81,6 @@ const extCfg = {
   xml: { bg: 'rgba(255,179,71,.12)', color: '#ffb347', label: 'XML' },
 };
 
-// ── HELPERS ──────────────────────────────────────────────────────────────────
 function getExt(name) {
   const p = name.split('.');
   return p.length > 1 ? p.pop().toLowerCase() : '';
@@ -53,7 +103,6 @@ function formatDate(s) {
   } catch { return s; }
 }
 
-// ── NAVEGAÇÃO E HISTÓRICO DA URL ─────────────────────────────────────────────
 function getView(files, path, query) {
   if (query) {
     const q = query.toLowerCase();
@@ -93,12 +142,10 @@ function navigate(path, saveHistory = true) {
   if (saveHistory) {
     try {
       if (path) {
-        // Se estiver entrando em uma pasta, adiciona o ?path=...
         const url = new URL(window.location.href);
         url.searchParams.set('path', path);
         window.history.pushState({ path: path }, '', url.toString());
       } else {
-        // Se estiver voltando para a raiz (clique na logo), limpa a URL completamente usando pathname
         window.history.pushState({ path: '' }, '', window.location.pathname);
       }
     } catch (err) {
@@ -114,7 +161,6 @@ window.addEventListener('popstate', (event) => {
   navigate(savedPath, false); 
 });
 
-// ── RENDER ───────────────────────────────────────────────────────────────────
 function renderBreadcrumb() {
   const bc = document.getElementById('breadcrumb');
   const parts = currentPath ? currentPath.split('/') : [];
@@ -208,7 +254,6 @@ function render() {
   renderBreadcrumb();
 }
 
-// ── STATS ────────────────────────────────────────────────────────────────────
 function updateStats() {
   document.getElementById('stat-count').textContent = allFiles.length;
   const total = allFiles.reduce((s, f) => s + f.tamanho, 0);
@@ -219,12 +264,10 @@ function updateStats() {
   document.getElementById('stat-folders').textContent = rootFolders.size;
 }
 
-// ── STATUS BAR ───────────────────────────────────────────────────────────────
 function setStatus(html) {
   document.getElementById('status-bar').innerHTML = html;
 }
 
-// ── FETCH ────────────────────────────────────────────────────────────────────
 async function fetchData() {
   const btn = document.getElementById('refresh-btn');
   btn.classList.add('spinning');
@@ -264,7 +307,6 @@ async function fetchData() {
   }
 }
 
-// ── ATUALIZAÇÃO DIÁRIA (06:00 AM) ────────────────────────────────────────────
 function scheduleDailyUpdate() {
   const now = new Date();
   const nextUpdate = new Date();
@@ -296,7 +338,6 @@ function changePage(d) {
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
-// ── INIT ─────────────────────────────────────────────────────────────────────
 document.getElementById('search').addEventListener('input', () => { currentPage = 1; render(); });
 document.getElementById('sort-select').addEventListener('change', () => { currentPage = 1; render(); });
 
@@ -311,33 +352,3 @@ try {
 renderBreadcrumb();
 fetchData();
 scheduleDailyUpdate();
-
-// ── TEMA CLARO / ESCURO E LOGO ──────────────────────────────────────────────
-const themeToggleBtn = document.getElementById('theme-toggle');
-const bodyElement = document.body;
-const brandLogo = document.getElementById('brand-logo');
-
-const logoClara = './IMAGES/LogoPreta_WP.png';
-const logoEscura = './IMAGES/LogoBranca_WP.png';
-
-const savedTheme = localStorage.getItem('theme');
-if (savedTheme === 'light') {
-  bodyElement.classList.add('light-mode');
-  if (brandLogo) brandLogo.src = logoClara;
-} else {
-  if (brandLogo) brandLogo.src = logoEscura;
-}
-
-if (themeToggleBtn) {
-  themeToggleBtn.addEventListener('click', () => {
-    bodyElement.classList.toggle('light-mode');
-    
-    if (bodyElement.classList.contains('light-mode')) {
-      localStorage.setItem('theme', 'light');
-      if (brandLogo) brandLogo.src = logoClara;
-    } else {
-      localStorage.setItem('theme', 'dark');
-      if (brandLogo) brandLogo.src = logoEscura;
-    }
-  });
-}
