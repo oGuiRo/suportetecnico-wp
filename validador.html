@@ -3,12 +3,10 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Conversor PFX — Quality Automação</title>
+  <title>Validador XML/JSON — Quality Automação</title>
   <link rel="icon" type="image/png" href="./IMAGES/BrasãoAba.png" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="style.css" />
-  
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/forge/1.3.1/forge.min.js"></script>
 </head>
 <body>
 
@@ -29,11 +27,11 @@
           <div class="nav-icon">📁</div>
           <span class="nav-text">FTP Quality</span>
         </a>
-        <a href="validador.html" class="nav-item" title="Validador XML/JSON">
+        <a href="validador.html" class="nav-item active" title="Validador XML/JSON">
           <div class="nav-icon">&lt;/&gt;</div>
           <span class="nav-text">Validador XML/JSON</span>
         </a>
-        <a href="conversor.html" class="nav-item active" title="Conversor PFX">
+        <a href="conversor.html" class="nav-item" title="Conversor PFX">
           <div class="nav-icon">🔐</div>
           <span class="nav-text">Conversor PFX</span>
         </a>
@@ -41,15 +39,15 @@
     </aside>
 
     <div class="app-container">
+      
       <header class="topbar">
         <div class="brand" onclick="window.location.href='index.html'" title="Voltar para o Início">
           <div class="brand-icon"><img id="brand-logo" src="./IMAGES/LogoPreta_WP.png" alt="Logotipo da Quality Automação" /></div>
-          <div class="brand-text">Conversor de Certificados</div>
+          <div class="brand-text">Validador de Estrutura</div>
         </div>
         
         <div class="topbar-actions">
           <div class="credits">Desenvolvido por <strong>Guilherme Rodrigues</strong></div>
-          
           <button id="theme-toggle" class="btn-icon" title="Alternar tema">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
@@ -59,35 +57,34 @@
       </header>
 
       <main class="main-content">
-        <div class="content-wrapper" style="max-width: 600px; margin-top: 40px;">
+        <div class="content-wrapper" style="max-width: 800px; margin-top: 40px;">
           
           <div class="stat-card" style="padding: 32px;">
-            <h2 style="margin-bottom: 8px; color: var(--text-primary);">Extrair CRT e KEY de .PFX</h2>
+            <h2 style="margin-bottom: 8px; color: var(--text-primary);">Validador de XML e JSON</h2>
             <p style="color: var(--text-secondary); font-size: 14px; margin-bottom: 24px;">
-              A conversão é feita localmente no seu navegador. O certificado não é enviado para nenhum servidor.
+              Cole o código abaixo. A validação é feita localmente, garantindo total privacidade dos dados da nota fiscal ou configuração.
             </p>
 
             <div style="display: flex; flex-direction: column; gap: 16px;">
-              <div>
-                <label style="display: block; font-size: 13px; font-weight: 500; margin-bottom: 8px; color: var(--text-primary);">1. Selecione o Certificado (.pfx ou .p12)</label>
-                <input type="file" id="pfx-file" accept=".pfx, .p12" style="width: 100%; padding: 10px; background: var(--bg-app); border: 1px solid var(--border); border-radius: var(--radius-md); color: var(--text-primary);" />
+              
+              <textarea id="codigo-input" placeholder="Cole seu XML ou JSON aqui..." style="width: 100%; height: 300px; padding: 16px; background: var(--bg-app); border: 1px solid var(--border); border-radius: var(--radius-md); color: var(--text-primary); font-family: 'JetBrains Mono', monospace; font-size: 13px; resize: vertical;"></textarea>
+              
+              <div style="display: flex; gap: 12px;">
+                <button id="btn-json" class="btn-primary" style="flex: 1; justify-content: center; padding: 12px; font-size: 14px; background: #ffb347; color: #000;">
+                  { } Validar como JSON
+                </button>
+                <button id="btn-xml" class="btn-primary" style="flex: 1; justify-content: center; padding: 12px; font-size: 14px; background: #ff9060; color: #000;">
+                  &lt;/&gt; Validar como XML
+                </button>
               </div>
 
-              <div>
-                <label style="display: block; font-size: 13px; font-weight: 500; margin-bottom: 8px; color: var(--text-primary);">2. Senha do Certificado</label>
-                <input type="password" id="pfx-password" placeholder="Digite a senha..." style="width: 100%; padding: 10px; background: var(--bg-app); border: 1px solid var(--border); border-radius: var(--radius-md); color: var(--text-primary);" />
-              </div>
-
-              <button id="btn-convert" class="btn-primary" style="width: 100%; justify-content: center; padding: 12px; margin-top: 8px; font-size: 14px;">
-                🔐 Converter e Baixar
-              </button>
-
-              <div id="status-msg" style="margin-top: 16px; font-size: 14px; text-align: center; font-weight: 500;"></div>
+              <div id="resultado-box" style="display: none; margin-top: 16px; padding: 16px; border-radius: var(--radius-md); font-family: 'JetBrains Mono', monospace; font-size: 13px; white-space: pre-wrap; word-break: break-all;"></div>
+              
             </div>
           </div>
 
         </div>
       </main>
-    </div> </div> <script src="conversor.js"></script>
+    </div> </div> <script src="validador.js"></script>
 </body>
 </html>
