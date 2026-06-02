@@ -69,7 +69,7 @@ const sefazLinks = {
   '29': { uf: 'BA', url: 'http://nfe.sefaz.ba.gov.br/servicos/nfce/modulos/geral/NFCEC_consulta_chave_acesso.aspx' },
   '31': { uf: 'MG', url: 'https://nfce.fazenda.mg.gov.br/portalnfce' },
   '32': { uf: 'ES', url: 'http://app.sefaz.es.gov.br/ConsultaNFCe/qrcode.aspx' },
-  '33': { uf: 'RJ', url: 'http://www4.fazenda.rj.gov.br/consultaNFCe/paginas/consultaChaveAcesso.faces' },
+  '33': { uf: 'RJ', url: 'https://consultadfe.fazenda.rj.gov.br/consultaDFe/paginas/consultaChaveAcesso.faces' },
   '35': { uf: 'SP', url: 'https://www.nfce.fazenda.sp.gov.br/NFCeConsultaPublica/Paginas/ConsultaPublica.aspx' },
   '41': { uf: 'PR', url: 'http://www.fazenda.pr.gov.br/nfce/consulta' },
   '42': { uf: 'SC', url: 'https://sat.sef.sc.gov.br/tax.NET/Sat.NFCe.Web/ConsultaPublica/ConsultaPublica.aspx' },
