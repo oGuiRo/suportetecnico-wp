@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard — Quality Automação</title>
+  <link rel="icon" type="image/png" href="./IMAGES/BrasãoAba.png" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    /* Estilos específicos para a Dashboard */
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 24px;
+      margin-top: 24px;
+    }
+    
+    .quick-actions {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .action-card {
+      background: var(--bg-app);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 24px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-decoration: none;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .action-card:hover {
+      border-color: #0098ff;
+      background: rgba(0, 152, 255, 0.05);
+      transform: translateY(-2px);
+    }
+
+    .action-icon {
+      font-size: 32px;
+      margin-bottom: 12px;
+    }
+
+    .action-title {
+      color: var(--text-primary);
+      font-weight: 600;
+      font-size: 15px;
+    }
+
+    /* Monitor SEFAZ */
+    .sefaz-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .sefaz-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 16px;
+      background: var(--bg-body);
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border);
+    }
+
+    .status-indicator {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      font-weight: 500;
+    }
+
+    .dot-status {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
+
+    .status-ok .dot-status { background: #00d4a0; box-shadow: 0 0 8px rgba(0,212,160,0.4); }
+    .status-ok { color: #00d4a0; }
+
+    .status-warn .dot-status { background: #ffb347; box-shadow: 0 0 8px rgba(255,179,71,0.4); }
+    .status-warn { color: #ffb347; }
+
+    .status-down .dot-status { background: #ff7070; box-shadow: 0 0 8px rgba(255,112,112,0.4); }
+    .status-down { color: #ff7070; }
+
+    /* Zendesk Links */
+    .zd-link {
+      display: flex;
+      align-items: center;
+      padding: 12px;
+      color: var(--text-primary);
+      text-decoration: none;
+      border-radius: var(--radius-sm);
+      margin-bottom: 8px;
+      background: rgba(136, 146, 164, 0.05);
+      transition: background 0.2s;
+    }
+    .zd-link:hover {
+      background: rgba(0, 152, 255, 0.1);
+    }
+    
+    @media (max-width: 850px) {
+      .dashboard-grid { grid-template-columns: 1fr; }
+      .quick-actions { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="dashboard-layout">
+    
+    <!-- BARRA LATERAL -->
+    <aside class="sidebar collapsed" id="sidebar">
+      <div class="sidebar-header">
+        <button class="btn-hamburger" id="sidebar-toggle" title="Expandir/Recolher Menu">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+      <nav class="sidebar-nav">
+        <!-- ── Início (Ativo nesta página) ── -->
+        <a href="index.html" class="nav-item active" title="Início / Dashboard">
+          <div class="nav-icon">🏠</div>
+          <span class="nav-text">Início</span>
+        </a>
+        
+        <!-- ── Ferramentas Internas ── -->
+        <a href="ftp.html" class="nav-item" title="Arquivos FTP Quality">
+          <div class="nav-icon">📁</div>
+          <span class="nav-text">FTP Quality</span>
+        </a>
+        <a href="validador.html" class="nav-item" title="Validador XML/JSON">
+          <div class="nav-icon">&lt;/&gt;</div>
+          <span class="nav-text">Validador XML/JSON</span>
+        </a>
+        <a href="conversor.html" class="nav-item" title="Conversor PFX">
+          <div class="nav-icon">🔐</div>
+          <span class="nav-text">Conversor PFX</span>
+        </a>
+
+        <!-- ── Linha separadora ── -->
+        <div style="height: 1px; background: var(--border); margin: 12px 16px;"></div>
+        
+        <div style="margin: 4px 16px 8px; font-size: 11px; font-weight: 600; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px;">
+          <span class="nav-text">Sefaz / Externo</span>
+        </div>
+
+        <a href="nfce.html" class="nav-item" title="Roteador NFC-e">
+          <div class="nav-icon">🛒</div>
+          <span class="nav-text">Consultar NFC-e</span>
+        </a>
+        <a href="https://www.nfe.fazenda.gov.br/portal/consultaRecaptcha.aspx?tipoConsulta=resumo&tipoConteudo=7PhJ%20gAVw2g=" target="_blank" class="nav-item" title="Consultar NF-e">
+          <div class="nav-icon">🧾</div>
+          <span class="nav-text">Consultar NF-e</span>
+        </a>
+        <a href="https://www.cte.fazenda.gov.br/portal/consultaRecaptcha.aspx?tipoConsulta=completa&tipoConteudo=mCK/KoCqru0=" target="_blank" class="nav-item" title="Consultar CT-e">
+          <div class="nav-icon">📦</div>
+          <span class="nav-text">Consultar CT-e</span>
+        </a>
+        <a href="https://dfe-portal.svrs.rs.gov.br/Mdfe/Consulta" target="_blank" class="nav-item" title="Consultar MDF-e">
+          <div class="nav-icon">🚛</div>
+          <span class="nav-text">Consultar MDF-e</span>
+        </a>
+      </nav>
+      
+    </aside>
+
+    <!-- CONTAINER DA APLICAÇÃO -->
+    <div class="app-container">
+      <header class="topbar">
+        <div class="brand">
+          <div class="brand-icon"><img id="brand-logo" src="./IMAGES/LogoPreta_WP.png" alt="Logotipo" /></div>
+          <div class="brand-text">Centro de Comando</div>
+        </div>
+        
+        <div class="topbar-actions">
+          <button id="theme-toggle" class="btn-icon" title="Alternar tema">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+            </svg>
+          </button>
+        </div>
+      </header>
+
+      <main class="main-content">
+        <div class="content-wrapper" style="max-width: 1200px;">
+          
+          <h2 style="color: var(--text-primary); margin-bottom: 16px;">Acesso Rápido</h2>
+          
+          <div class="quick-actions">
+            <a href="ftp.html" class="action-card">
+              <div class="action-icon">📁</div>
+              <div class="action-title">Acessar FTP</div>
+            </a>
+            <a href="nfce.html" class="action-card">
+              <div class="action-icon">🛒</div>
+              <div class="action-title">Roteador NFC-e</div>
+            </a>
+            <a href="validador.html" class="action-card">
+              <div class="action-icon">&lt;/&gt;</div>
+              <div class="action-title">Validar XML / JSON</div>
+            </a>
+          </div>
+
+          <div class="dashboard-grid">
+            
+            <!-- COLUNA ESQUERDA: MONITOR SEFAZ -->
+            <div class="stat-card" style="padding: 24px;">
+              <h3 style="color: var(--text-primary); margin-bottom: 16px; display: flex; justify-content: space-between;">
+                <span>📡 Monitor Sefaz (NF-e/NFC-e)</span>
+                <span style="font-size: 12px; color: var(--text-secondary); font-weight: 400; align-self: flex-end;">Atualizado ao abrir</span>
+              </h3>
+              
+              <div class="sefaz-list">
+                <div class="sefaz-item">
+                  <span style="color: var(--text-primary); font-weight: 500;">Espírito Santo (ES)</span>
+                  <div class="status-indicator status-ok"><div class="dot-status"></div> Operacional</div>
+                </div>
+                <div class="sefaz-item">
+                  <span style="color: var(--text-primary); font-weight: 500;">Ambiente Nacional (SVRS)</span>
+                  <div class="status-indicator status-ok"><div class="dot-status"></div> Operacional</div>
+                </div>
+                <div class="sefaz-item">
+                  <span style="color: var(--text-primary); font-weight: 500;">São Paulo (SP)</span>
+                  <div class="status-indicator status-warn"><div class="dot-status"></div> Instabilidade</div>
+                </div>
+                <div class="sefaz-item">
+                  <span style="color: var(--text-primary); font-weight: 500;">Minas Gerais (MG)</span>
+                  <div class="status-indicator status-ok"><div class="dot-status"></div> Operacional</div>
+                </div>
+              </div>
+              <p style="font-size: 12px; color: var(--text-secondary); margin-top: 16px; text-align: center;">
+                *Interface de demonstração. A integração de status real pode ser feita com um robô no Render futuramente.
+              </p>
+            </div>
+
+            <!-- COLUNA DIREITA: ZENDESK E AVISOS -->
+            <div>
+              <div class="stat-card" style="padding: 24px; margin-bottom: 24px;">
+                <h3 style="color: var(--text-primary); margin-bottom: 16px;">🎧 Atalhos Zendesk</h3>
+                
+                <!-- Substitua 'suaempresa' pelo domínio do seu Zendesk -->
+                <a href="https://webposto.zendesk.com/agent/home/tickets" target="_blank" class="zd-link">
+                  <span style="margin-right: 12px; font-size: 18px;">🎯</span> Meus Chamados Abertos
+                </a>
+                <a href="https://webposto.zendesk.com/agent/filters/43720130483348" target="_blank" class="zd-link">
+                  <span style="margin-right: 12px; font-size: 18px;">⏳</span> Chamados Em Andamento
+                </a>
+                <a href="https://webposto.zendesk.com/agent/filters/43720130483348" target="_blank" class="zd-link">
+                  <span style="margin-right: 12px; font-size: 18px;">📥</span> Fila Geral / Novos
+                </a>
+              </div>
+
+              <div class="stat-card" style="padding: 24px;">
+                <h3 style="color: var(--text-primary); margin-bottom: 16px;">📌 Bloco de Notas</h3>
+                <textarea placeholder="Anote aqui recados rápidos... (Salva sozinho no seu navegador)" id="bloco-notas" style="width: 100%; height: 120px; background: var(--bg-body); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 12px; color: var(--text-primary); font-family: 'Inter', sans-serif; font-size: 13px; resize: none;"></textarea>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script src="dashboard.js"></script>
+</body>
+</html>
