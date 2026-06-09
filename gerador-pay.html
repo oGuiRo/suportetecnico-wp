@@ -131,18 +131,18 @@
               <h3 style="color: var(--text-primary); margin-bottom: 20px;">Dados da Configuração</h3>
               
               <div class="form-group">
-                <label>CNPJ / Identificador</label>
-                <input type="text" id="pay-cnpj" placeholder="Digite o CNPJ ou Chave" autocomplete="off" />
+                <label>IP do Servidor PDV: </label>
+                <input type="text" id="pay-ip" placeholder="Ex: 192.168.0.100" autocomplete="off" />
               </div>
 
               <div class="form-group">
-                <label>Código do Terminal</label>
-                <input type="text" id="pay-terminal" placeholder="Ex: PDV01" autocomplete="off" />
+                <label>Porta: </label>
+                <input type="text" id="pay-porta" placeholder="Ex: 8080" autocomplete="off" />
               </div>
 
               <div class="form-group">
-                <label>Token / Hash (Se houver)</label>
-                <input type="text" id="pay-token" placeholder="Cole o token aqui" autocomplete="off" />
+                <label>PDV: </label>
+                <input type="text" id="pay-pdv" placeholder="Ex: PDV01" autocomplete="off" />
               </div>
 
               <button class="btn-gerar" onclick="gerarQrCodePay()">Gerar QR Code</button>
@@ -166,24 +166,27 @@
 
   <script src="./js/dashboard.js"></script>
   <script>
-    // Lógica básica para gerar o QR Code na tela
     function gerarQrCodePay() {
-      const cnpj = document.getElementById('pay-cnpj').value;
-      const terminal = document.getElementById('pay-terminal').value;
-      const token = document.getElementById('pay-token').value;
+      const ip = document.getElementById('pay-ip').value.trim();
+      const porta = document.getElementById('pay-porta').value.trim();
+      const pdv = document.getElementById('pay-pdv').value.trim();
       const container = document.getElementById('qrcode-container');
 
-      if (!cnpj) {
-        alert("Preencha ao menos o CNPJ/Identificador!");
+      if (!ip || !porta || !pdv) {
+        alert("Preencha todos os campos (IP, Porta e Referência do PDV)!");
         return;
       }
 
-      // Aqui limpamos a caixa e desenhamos o QR Code novo
       container.innerHTML = ""; 
       
-      // Essa é a "string" que vai virar o QR Code. 
-      // PRECISAREMOS AJUSTAR ISSO PARA O FORMATO EXATO QUE A QUALITY USA!
-      const textoParaQrCode = `PAYCONFIG|${cnpj}|${terminal}|${token}`;
+      // Monta um objeto JSON e converte para string (padrão mais comum em integrações mobile modernas).
+      // Caso o leitor da Quality acuse erro de formato, o formato da string pode ser um delimitador simples como `${ip}:${porta}|${pdv}`.
+      const dados = {
+        ip: ip,
+        porta: porta,
+        pdv: pdv
+      };
+      const textoParaQrCode = JSON.stringify(dados);
 
       new QRCode(container, {
         text: textoParaQrCode,
