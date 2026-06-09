@@ -142,7 +142,7 @@
 
               <div class="form-group">
                 <label>PDV: </label>
-                <input type="text" id="pay-pdv" placeholder="Ex: PDV01" autocomplete="off" />
+                <input type="text" id="pay-pdv" placeholder="Ex: 003" autocomplete="off" />
               </div>
 
               <button class="btn-gerar" onclick="gerarQrCodePay()">Gerar QR Code</button>
@@ -173,19 +173,19 @@
       const container = document.getElementById('qrcode-container');
 
       if (!ip || !porta || !pdv) {
-        alert("Preencha todos os campos (IP, Porta e Referência do PDV)!");
+        alert("Preencha todos os campos (IP, Porta e PDV)!");
         return;
       }
 
       container.innerHTML = ""; 
       
-      // Monta um objeto JSON e converte para string (padrão mais comum em integrações mobile modernas).
-      // Caso o leitor da Quality acuse erro de formato, o formato da string pode ser um delimitador simples como `${ip}:${porta}|${pdv}`.
+      // Monta o objeto JSON unindo o IP e a Porta no mesmo campo, 
+      // exatamente no formato que a Quality Automação exige.
       const dados = {
-        ip: ip,
-        porta: porta,
+        ip: `${ip}:${porta}`,
         pdv: pdv
       };
+      
       const textoParaQrCode = JSON.stringify(dados);
 
       new QRCode(container, {
