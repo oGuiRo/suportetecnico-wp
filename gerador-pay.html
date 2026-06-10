@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Gerador PAY</title>
+  <title>Gerador PAY — Suporte WP</title>
   <link rel="icon" type="image/png" href="./IMAGES/BrasãoAba.png" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="./css/style.css" />
@@ -55,6 +55,16 @@
       padding: 24px;
       margin-top: 16px;
     }
+    /* Estilo especial para a caixa da senha */
+    .senha-box {
+      background: var(--bg-body); 
+      border: 2px dashed #0098ff; 
+      border-radius: 8px; 
+      padding: 24px; 
+      display: inline-block; 
+      min-width: 300px;
+      margin-top: 16px;
+    }
   </style>
 </head>
 <body>
@@ -101,18 +111,6 @@
         <a href="nfce.html" class="nav-item" title="Roteador NFC-e">
           <div class="nav-icon">🛒</div>
           <span class="nav-text">Consultar NFC-e</span>
-        </a>
-        <a href="https://www.nfe.fazenda.gov.br/portal/consultaRecaptcha.aspx?tipoConsulta=resumo&tipoConteudo=7PhJ%20gAVw2g=" target="_blank" class="nav-item" title="Consultar NF-e">
-          <div class="nav-icon">🧾</div>
-          <span class="nav-text">Consultar NF-e</span>
-        </a>
-        <a href="https://www.cte.fazenda.gov.br/portal/consultaRecaptcha.aspx?tipoConsulta=completa&tipoConteudo=mCK/KoCqru0=" target="_blank" class="nav-item" title="Consultar CT-e">
-          <div class="nav-icon">📦</div>
-          <span class="nav-text">Consultar CT-e</span>
-        </a>
-        <a href="https://dfe-portal.svrs.rs.gov.br/Mdfe/Consulta" target="_blank" class="nav-item" title="Consultar MDF-e">
-          <div class="nav-icon">🚛</div>
-          <span class="nav-text">Consultar MDF-e</span>
         </a>
       </nav>
     </aside>
@@ -169,6 +167,21 @@
               </div>
             </div>
 
+            <div class="stat-card" style="grid-column: 1 / -1; padding: 24px; text-align: center;">
+              <h3 style="color: var(--text-primary); margin-bottom: 8px;">🔑 Senha Dinâmica do Sistema</h3>
+              <p style="font-size: 13px; color: var(--text-secondary);">
+                Calculada automaticamente usando: <strong>Ano + Dia + Mês + Hora</strong>
+              </p>
+              
+              <div class="senha-box">
+                <div id="senha-dinamica" style="font-family: 'JetBrains Mono', monospace; font-size: 36px; font-weight: 600; color: #0098ff; letter-spacing: 4px;">
+                  Calculando...
+                </div>
+              </div>
+              
+              <p id="senha-relogio" style="font-size: 12px; color: var(--text-secondary); margin-top: 16px;"></p>
+            </div>
+
           </div>
 
         </div>
@@ -178,6 +191,7 @@
 
   <script src="./js/dashboard.js"></script>
   <script>
+    // ── 1. LÓGICA DO QR CODE ──
     function gerarQrCodePay() {
       const ip = document.getElementById('pay-ip').value.trim();
       const porta = document.getElementById('pay-porta').value.trim();
@@ -191,8 +205,6 @@
 
       container.innerHTML = ""; 
       
-      // Monta o objeto JSON unindo o IP e a Porta no mesmo campo, 
-      // exatamente no formato que a Quality Automação exige.
       const dados = {
         ip: `${ip}:${porta}`,
         pdv: pdv
@@ -209,6 +221,33 @@
         correctLevel : QRCode.CorrectLevel.H
       });
     }
+
+    // ── 2. LÓGICA DA SENHA DINÂMICA ──
+    function atualizarSenha() {
+      const agora = new Date();
+      
+      const ano = agora.getFullYear(); // Ex: 2026
+      const dia = String(agora.getDate()).padStart(2, '0'); // Ex: 10
+      const mes = String(agora.getMonth() + 1).padStart(2, '0'); // Ex: 06
+      const hora = String(agora.getHours()).padStart(2, '0'); // Ex: 11
+      
+      // Formata a exibição do relógio para confirmar visualmente
+      const minutos = String(agora.getMinutes()).padStart(2, '0');
+      const segundos = String(agora.getSeconds()).padStart(2, '0');
+
+      // A senha solicitada: Ano + Dia + Mês + Hora (sem espaços/traços)
+      const senhaGerada = ano - dia - mes - hora;
+
+      // Atualiza os elementos na tela
+      document.getElementById('senha-dinamica').innerText = senhaGerada;
+      document.getElementById('senha-relogio').innerText = `Relógio do sistema: ${dia}/${mes}/${ano} às ${hora}:${minutos}:${segundos}`;
+    }
+
+    // Executa a função na mesma hora que a página carrega
+    atualizarSenha();
+
+    // Roda a função de novo a cada 1000 milissegundos (1 segundo)
+    setInterval(atualizarSenha, 1000);
   </script>
 </body>
 </html>
