@@ -61,3 +61,19 @@ if (blocoNotas) {
     localStorage.setItem('anotacoesDashboard', blocoNotas.value);
   });
 }
+
+// ── ROBÔ INVISÍVEL: PRÉ-CARREGAMENTO DO FTP ──
+// Espera 2 segundos para não atrasar a página atual e então baixa a lista do FTP no fundo
+setTimeout(() => {
+  if (!sessionStorage.getItem('ftpCacheQA')) {
+    fetch('https://ftp-qualityautomacao-frontend.onrender.com/api/arquivos')
+      .then(res => res.json())
+      .then(data => {
+        if (!data.erro) {
+          sessionStorage.setItem('ftpCacheQA', JSON.stringify(data));
+          console.log('⚡ FTP Pré-carregado com sucesso nos bastidores!');
+        }
+      })
+      .catch(err => console.log('Aviso: Prefetch do FTP falhou.'));
+  }
+}, 2000);

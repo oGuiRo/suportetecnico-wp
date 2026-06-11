@@ -268,14 +268,33 @@ function setStatus(html) {
   document.getElementById('status-bar').innerHTML = html;
 }
 
+// A MÁGICA DO CACHE ACONTECE AQUI
 async function fetchData() {
   const btn = document.getElementById('refresh-btn');
-  btn.classList.add('spinning');
+  if(btn) btn.classList.add('spinning');
+  
+  // 1. TENTA CARREGAR DO CACHE PRIMEIRO PARA SER INSTANTÂNEO
+  const cachedData = sessionStorage.getItem('ftpCacheQA');
+  if (cachedData && allFiles.length === 0) {
+    try {
+      const data = JSON.parse(cachedData);
+      prevKeys = new Set(data.arquivos.map(f => f.key));
+      allFiles = data.arquivos;
+      updateStats();
+      render();
+      setStatus(`Arquivos carregados instantaneamente ⚡`);
+    } catch (e) { console.log('Erro ao ler o cache.'); }
+  }
+
+  // 2. VAI NO SERVIDOR BUSCAR ATUALIZAÇÕES POR BAIXO DOS PANOS
   try {
     const res = await fetch(API_URL);
     if (!res.ok) throw new Error(`Servidor retornou ${res.status}`);
     const data = await res.json();
     if (data.erro) throw new Error(data.erro);
+
+    // Salva a nova lista no navegador para as próximas aberturas
+    sessionStorage.setItem('ftpCacheQA', JSON.stringify(data));
 
     const currentKeys = new Set(data.arquivos.map(f => f.key));
     newKeys = new Set([...currentKeys].filter(k => !prevKeys.has(k) && prevKeys.size > 0));
@@ -296,14 +315,16 @@ async function fetchData() {
 
     if (newKeys.size > 0) setTimeout(() => { newKeys = new Set(); render(); }, 5000);
   } catch (err) {
-    document.getElementById('listing').innerHTML = `
-    <div class="error-box">
-      <strong>⚠ Não foi possível conectar ao servidor.</strong><br>
-      Erro: <code>${err.message}</code>
-    </div>`;
-    setStatus('⚠ Erro de conexão');
+    if(allFiles.length === 0) { // Só mostra erro se não tinha cache nenhum
+      document.getElementById('listing').innerHTML = `
+      <div class="error-box">
+        <strong>⚠ Não foi possível conectar ao servidor.</strong><br>
+        Erro: <code>${err.message}</code>
+      </div>`;
+      setStatus('⚠ Erro de conexão');
+    }
   } finally {
-    btn.classList.remove('spinning');
+    if(btn) btn.classList.remove('spinning');
   }
 }
 
@@ -329,6 +350,9 @@ function scheduleDailyUpdate() {
 }
 
 function manualRefresh() {
+  // Força limpar o cache para buscar do zero se o usuário clicar em Atualizar
+  sessionStorage.removeItem('ftpCacheQA');
+  allFiles = [];
   fetchData(); 
 }
 
