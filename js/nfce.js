@@ -58,7 +58,7 @@ const sefazLinks = {
   '15': { uf: 'PA', url: 'https://app.sefa.pa.gov.br/consulta-nfce/#/consulta' },
   '16': { uf: 'AP', url: 'https://www.sefaz.ap.gov.br/sate/seg/SEGf_AcessarFuncao.jsp?cdFuncao=FIS_1261' },
   '17': { uf: 'TO', url: 'http://www.sefaz.to.gov.br/nfce/consulta.jsf' },
-  '21': { uf: 'MA', url: 'https://nfce.sefaz.ma.gov.br/portal/consultaNfce.jsp' },
+  '21': { uf: 'MA', url: 'http://www.nfce.sefaz.ma.gov.br/portal/consultarnfce.jsp?dswid=2957' },
   '22': { uf: 'PI', url: 'https://webas.sefaz.pi.gov.br/nfceweb/consultarNFCe.jsf' },
   '23': { uf: 'CE', url: 'https://nfce.sefaz.ce.gov.br/pages/ShowNFCe.html' },
   '24': { uf: 'RN', url: 'http://nfce.set.rn.gov.br/consultarNFCe.aspx' },
