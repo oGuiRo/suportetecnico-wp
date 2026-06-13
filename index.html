@@ -118,19 +118,15 @@
                 <a href="https://monitorsefaz.com.br/" target="_blank" style="font-size: 12px; color: #0098ff; text-decoration: none;">Abrir em nova aba ↗</a>
               </h3>
               
-              <div class="stat-card" style="padding: 24px; display: flex; flex-direction: column; min-height: 500px;">
-                <h3 style="color: var(--text-primary); margin-bottom: 16px; display: flex; justify-content: space-between;">
-                  <span>📡 Monitor Sefaz</span>
-                  <a href="https://monitorsefaz.com.br/" target="_blank" style="font-size: 12px; color: #0098ff;">Abrir em nova aba</a>
-                </h3>
-                <iframe 
-                  id="sefaz-iframe"
-                  data-src="https://monitorsefaz.com.br/" 
-                  loading="lazy"
-                  style="width: 100%; height: 100%; border: 1px solid var(--border); border-radius: 8px; background: #fff;"
-                  title="Monitor Sefaz">
-                </iframe>
-              </div>
+              <iframe 
+                src="https://monitorsefaz.com.br/" 
+                sandbox="allow-scripts allow-same-origin"
+                loading="lazy"
+                onload="setTimeout(function(){ window.scrollTo(0, 0); }, 300);"
+                style="width: 100%; flex: 1; border: 1px solid var(--border); border-radius: 8px; background: #fff;"
+                title="Monitor Sefaz">
+              </iframe>
+            </div>
 
             <div>
               <div class="stat-card" style="padding: 24px; margin-bottom: 24px;">
@@ -188,7 +184,7 @@
                   <div class="feature-icon-wrapper">🔐</div>
                   <h4 style="color: var(--text-primary); font-size: 18px; margin-bottom: 12px;">Conversor de Certificados PFX</h4>
                   <p style="color: var(--text-secondary); font-size: 14px; line-height: 1.6;">
-                    Descomplica a conversão de certificados .PFX para .CRT (utilizados na criação de API no portal Developers dos bancos ). O script processa nativamente o arquivo .PFX e <strong>extrai a chave pública (.CRT) e privada (.KEY)</strong> de forma imediata e totalmente segura no navegador (não expondo o certificado do cliente a qualquer risco da Web).
+                    Descomplica a conversão de certificados .PFX para .CRT (utilizados na criação de API no portal Developers dos bancos ). O script processa nativamente o arquivo .PFX e <strong>extrai a chave pública (.CRRT) e privada (.KEY)</strong> de forma imediata e totalmente segura no navegador (não expondo o certificado do cliente a qualquer risco da Web).
                   </p>
                 </div>
 
