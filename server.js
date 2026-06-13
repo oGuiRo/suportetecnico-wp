@@ -1,6 +1,5 @@
 const express = require('express');
 const cors = require('cors');
-const cheerio = require('cheerio'); // Necessário instalar: npm install cheerio
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -40,32 +39,44 @@ app.get('/api/arquivos', async (req, res) => {
   } catch (err) { res.status(500).json({ erro: err.message }); }
 });
 
-// ROTA SEFAZ (O Backend lê a Sefaz e te entrega o JSON limpo)
+app.listen(PORT, () => console.log(`Rodando na porta ${PORT}`));
+
 app.get('/api/sefaz', async (req, res) => {
   try {
-    const fetch = globalThis.fetch || (await import('node-fetch')).default;
-    const response = await fetch('http://www.nfe.fazenda.gov.br/portal/disponibilidade.aspx');
+    const fetch = (await import('node-fetch')).default;
+    
+    // Adicionamos um controller de abort (timeout de 5 segundos)
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 5000);
+
+    const response = await fetch('http://www.nfe.fazenda.gov.br/portal/disponibilidade.aspx', { 
+      signal: controller.signal 
+    });
+    
+    clearTimeout(timeout);
     const html = await response.text();
     const $ = cheerio.load(html);
     const resultados = [];
+    
     $('table.tabelaListagemDados tbody tr').each((i, el) => {
       if (i === 0) return;
       const tds = $(el).find('td');
+      if (tds.length < 5) return;
+      
       const getStatus = (td) => {
         const src = $(td).find('img').attr('src') || '';
-        return src.includes('verde') ? 'online' : src.includes('amarela') ? 'instavel' : src.includes('vermelha') ? 'offline' : 'indisponivel';
+        return src.includes('verde') ? 'online' : src.includes('amarela') ? 'instavel' : 'offline';
       };
+      
       resultados.push({
         autorizador: $(tds[0]).text().trim(),
         autorizacao: getStatus(tds[1]),
         retorno: getStatus(tds[2]),
-        inutilizacao: getStatus(tds[3]),
-        consulta: getStatus(tds[4]),
-        statusServico: getStatus(tds[5])
+        consulta: getStatus(tds[4])
       });
     });
     res.json(resultados);
-  } catch (e) { res.status(500).json({ erro: e.message }); }
+  } catch (e) {
+    res.status(500).json({ erro: "Sefaz indisponível no momento" });
+  }
 });
-
-app.listen(PORT, () => console.log(`Rodando na porta ${PORT}`));
