@@ -60,7 +60,7 @@ const sefazLinks = {
   '17': { uf: 'TO', url: 'http://www.sefaz.to.gov.br/nfce/consulta.jsf' },
   '21': { uf: 'MA', url: 'http://www.nfce.sefaz.ma.gov.br/portal/consultarnfce.jsp?dswid=2957' },
   '22': { uf: 'PI', url: 'https://webas.sefaz.pi.gov.br/nfceweb/consultarNFCe.jsf' },
-  '23': { uf: 'CE', url: 'https://nfce.sefaz.ce.gov.br/pages/ShowNFCe.html' },
+  '23': { uf: 'CE', url: 'http://nfce.sefaz.ce.gov.br/pages/consultaNota.jsf' },
   '24': { uf: 'RN', url: 'http://nfce.set.rn.gov.br/consultarNFCe.aspx' },
   '25': { uf: 'PB', url: 'https://www.sefaz.pb.gov.br/nfce/consulta' },
   '26': { uf: 'PE', url: 'https://nfce.sefaz.pe.gov.br/nfce/consulta' },
