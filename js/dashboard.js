@@ -68,9 +68,14 @@ async function carregarSefaz() {
 
 // ── 4. LÓGICA DO FTP (Seu código original que já funciona) ──────────────────
 // Mantive a lógica de carregamento do seu FTP aqui embaixo para não conflitar
-document.addEventListener('DOMContentLoaded', () => {
-    carregarSefaz();
-    // ... aqui você pode incluir a chamada da sua função de carga do FTP (fetchData)
+document.addEventListener("DOMContentLoaded", () => {
+  const iframe = document.getElementById('sefaz-iframe');
+  if (iframe) {
+    // Carrega o site apenas 1 segundo após a página abrir, evitando "trancos"
+    setTimeout(() => {
+      iframe.src = iframe.getAttribute('data-src');
+    }, 1000);
+  }
 });
 
 // ── TRAVA DE ROLAGEM PARA O IFRAME SEFAZ ──

@@ -597,3 +597,30 @@ body {
     height: auto !important;
   }
 }
+
+/* Correção de Layout Mobile */
+@media (max-width: 768px) {
+  body {
+    overflow-x: hidden; /* Corta qualquer transbordamento horizontal */
+  }
+
+  .dashboard-layout {
+    display: block !important; /* Remove o display flex que força largura */
+  }
+
+  .app-container {
+    width: 100vw !important;
+    margin-left: 0 !important;
+  }
+
+  .dashboard-grid, .quick-actions, .showcase-grid {
+    grid-template-columns: 1fr !important; /* Empilha tudo em uma coluna */
+    padding-left: 10px !important;
+    padding-right: 10px !important;
+  }
+
+  /* Ajuste específico para o Gerador Pay */
+  .content-wrapper > div[style*="display: grid"] {
+    grid-template-columns: 1fr !important;
+  }
+}
