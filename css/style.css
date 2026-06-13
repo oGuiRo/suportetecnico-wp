@@ -577,3 +577,23 @@ body {
     padding-right: 8px;
   }
 }
+
+.content-wrapper {
+  max-width: 1200px;
+  width: 100%; /* Isso garante que o wrapper respeite o container pai */
+  margin: 0 auto;
+  padding: 0 20px; /* Garante um respiro nas laterais */
+}
+
+@media (max-width: 768px) {
+  /* Força as colunas do configurador e da dashboard a empilharem */
+  .content-wrapper > div[style*="display: grid"] {
+    grid-template-columns: 1fr !important;
+  }
+  
+  /* Garante que imagens e vídeos não estourem a tela */
+  video, img {
+    max-width: 100% !important;
+    height: auto !important;
+  }
+}
