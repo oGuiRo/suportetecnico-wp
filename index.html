@@ -7,75 +7,6 @@
   <link rel="icon" type="image/png" href="./IMAGES/BrasãoAba.png" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="./css/style.css" />
-  <style>
-    /* Estilos específicos para a Dashboard */
-    .dashboard-grid {
-      display: grid;
-      grid-template-columns: 2fr 1fr;
-      gap: 24px;
-      margin-top: 24px;
-    }
-    
-    .quick-actions {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 16px;
-      margin-bottom: 24px;
-    }
-
-    .action-card {
-      background: var(--bg-app);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-md);
-      padding: 24px;
-      text-align: center;
-      cursor: pointer;
-      transition: all 0.2s;
-      text-decoration: none;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .action-card:hover {
-      border-color: #0098ff;
-      background: rgba(0, 152, 255, 0.05);
-      transform: translateY(-2px);
-    }
-
-    .action-icon {
-      font-size: 32px;
-      margin-bottom: 12px;
-    }
-
-    .action-title {
-      color: var(--text-primary);
-      font-weight: 600;
-      font-size: 15px;
-    }
-
-    /* Zendesk Links */
-    .zd-link {
-      display: flex;
-      align-items: center;
-      padding: 12px;
-      color: var(--text-primary);
-      text-decoration: none;
-      border-radius: var(--radius-sm);
-      margin-bottom: 8px;
-      background: rgba(136, 146, 164, 0.05);
-      transition: background 0.2s;
-    }
-    .zd-link:hover {
-      background: rgba(0, 152, 255, 0.1);
-    }
-    
-    @media (max-width: 850px) {
-      .dashboard-grid { grid-template-columns: 1fr; }
-      .quick-actions { grid-template-columns: 1fr; }
-    }
-  </style>
 </head>
 <body>
 
@@ -144,7 +75,7 @@
 
     <div class="app-container">
       <header class="topbar">
-        <div class="brand">
+        <div class="brand" onclick="window.location.href='index.html'" style="cursor: pointer;" title="Voltar para o Início">
           <div class="brand-icon"><img id="brand-logo" src="./IMAGES/LogoPreta_WP.png" alt="Logotipo" /></div>
           <div class="brand-text">Centro de Comando</div>
         </div>
@@ -182,19 +113,10 @@
           <div class="dashboard-grid">
             
             <div class="stat-card" style="padding: 24px; display: flex; flex-direction: column; min-height: 600px;">
-              <h3 style="color: var(--text-primary); margin-bottom: 16px; display: flex; justify-content: space-between;">
-                <span>📡 Monitor Sefaz (Tempo Real)</span>
-                <a href="https://monitorsefaz.com.br/" target="_blank" style="font-size: 12px; color: #0098ff; text-decoration: none;">Abrir em nova aba ↗</a>
-              </h3>
-              
-              <iframe 
-                src="https://monitorsefaz.com.br/" 
-                sandbox="allow-scripts allow-same-origin"
-                loading="lazy"
-                onload="setTimeout(function(){ window.scrollTo(0, 0); }, 300);"
-                style="width: 100%; flex: 1; border: 1px solid var(--border); border-radius: 8px; background: #fff;"
-                title="Monitor Sefaz">
-              </iframe>
+              <h3>📡 Monitor Sefaz</h3>
+              <div id="sefaz-container" style="flex: 1; overflow-y: auto;">
+                Carregando dados da Sefaz...
+              </div>
             </div>
 
             <div>
@@ -216,6 +138,64 @@
                 <h3 style="color: var(--text-primary); margin-bottom: 16px;">📌 Bloco de Notas</h3>
                 <textarea placeholder="Anote aqui recados rápidos... (Salva sozinho no seu navegador)" id="bloco-notas" style="width: 100%; height: 120px; background: var(--bg-body); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 12px; color: var(--text-primary); font-family: 'Inter', sans-serif; font-size: 13px; resize: none;"></textarea>
               </div>
+            </div>
+
+            <div class="stat-card" style="grid-column: 1 / -1; padding: 48px; margin-top: 16px;">
+              
+              <div style="text-align: center; margin-bottom: 48px;">
+                <h2 style="color: var(--text-primary); font-size: 32px; font-weight: 600; margin-bottom: 16px;">
+                  🚀 Conheça o Centro de Comando
+                </h2>
+                <p style="color: var(--text-secondary); max-width: 800px; margin: 0 auto; line-height: 1.6; font-size: 16px;">
+                  Muito mais que um repositório de links. Este é um ecossistema completo de utilitários desenvolvidos sob medida para acelerar o diagnóstico, simplificar configurações complexas e elevar drasticamente a produtividade nos atendimentos do Web Posto.
+                </p>
+              </div>
+
+              <video src="./IMAGES/demo.mp4" autoplay loop muted playsinline style="width: 100%; max-width: 900px; display: block; margin: 0 auto 48px auto; border-radius: 16px; border: 1px solid var(--border); box-shadow: 0 12px 32px rgba(0,0,0,0.1);"></video>
+              
+              <div class="showcase-grid">
+                
+                <div class="feature-card">
+                  <div class="feature-icon-wrapper">⚡</div>
+                  <h4 style="color: var(--text-primary); font-size: 18px; margin-bottom: 12px;">FTP Quality Ultra-Rápido</h4>
+                  <p style="color: var(--text-secondary); font-size: 14px; line-height: 1.6;">
+                    Acesso instantâneo aos arquivos e instaladores S3. A ferramenta utiliza <strong>Prefetching e Cache Inteligente</strong>: os arquivos são baixados silenciosamente de forma oculta assim que você abre a página inicial, eliminando qualquer tela de carregamento na hora da busca.
+                  </p>
+                </div>
+
+                <div class="feature-card">
+                  <div class="feature-icon-wrapper">🛠️</div>
+                  <h4 style="color: var(--text-primary); font-size: 18px; margin-bottom: 12px;">Validador XML / JSON</h4>
+                  <p style="color: var(--text-secondary); font-size: 14px; line-height: 1.6;">
+                    Indispensável para análise de integrações e notas. Cole o código minificado e o sistema aplica a <strong>Organização automática</strong>, organizando as indentações, quebrando linhas corretamente e detectando erros de sintaxe em milissegundos.
+                  </p>
+                </div>
+
+                <div class="feature-card">
+                  <div class="feature-icon-wrapper">🔐</div>
+                  <h4 style="color: var(--text-primary); font-size: 18px; margin-bottom: 12px;">Conversor de Certificados PFX</h4>
+                  <p style="color: var(--text-secondary); font-size: 14px; line-height: 1.6;">
+                    Descomplica a conversão de certificados .PFX para .CRT (utilizados na criação de API no portal Developers dos bancos ). O script processa nativamente o arquivo .PFX e <strong>extrai a chave pública (.CRRT) e privada (.KEY)</strong> de forma imediata e totalmente segura no navegador (não expondo o certificado do cliente a qualquer risco da Web).
+                  </p>
+                </div>
+
+                <div class="feature-card">
+                  <div class="feature-icon-wrapper">📱</div>
+                  <h4 style="color: var(--text-primary); font-size: 18px; margin-bottom: 12px;">Configurador PAY & Senha</h4>
+                  <p style="color: var(--text-secondary); font-size: 14px; line-height: 1.6;">
+                    Gera na hora o QR Code formatado para pareamento rápido de terminais. Inclui o <strong>motor de Senha Dinâmica</strong> original, atualizado em tempo real sincronizado com o relógio.
+                  </p>
+                </div>
+
+              </div>
+
+              <div style="text-align: center; border-top: 1px solid var(--border); padding-top: 32px; margin-top: 16px;">
+                <p style="font-size: 14px; color: var(--text-secondary); line-height: 1.6;">
+                  Desenvolvido com foco em performance e qualidade de atendimento por <strong>Guilherme Rodrigues</strong>.<br>
+                  <em style="opacity: 0.8;">"Centralizar o complexo para resolver problemas de forma simples."</em>
+                </p>
+              </div>
+
             </div>
 
           </div>

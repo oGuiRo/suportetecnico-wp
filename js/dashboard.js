@@ -77,3 +77,29 @@ setTimeout(() => {
       .catch(err => console.log('Aviso: Prefetch do FTP falhou.'));
   }
 }, 2000);
+
+
+async function carregarSefaz() {
+  const container = document.getElementById('sefaz-container');
+  if (!container) return;
+  try {
+    const res = await fetch('https://ftp-qualityautomacao-frontend.onrender.com/api/sefaz');
+    const dados = await res.json();
+    const statusCores = { 'online': '#10b981', 'instavel': '#f59e0b', 'offline': '#ef4444', 'indisponivel': '#71717a' };
+    
+    let html = `<table style="width:100%; border-collapse:collapse; font-size:12px;">`;
+    dados.forEach(e => {
+      const dot = (s) => `<span style="display:inline-block; width:8px; height:8px; border-radius:50%; background:${statusCores[s]}"></span>`;
+      html += `<tr style="border-bottom:1px solid #27272a">
+        <td style="padding:8px">${e.autorizador}</td>
+        <td style="padding:8px">${dot(e.autorizacao)}</td>
+        <td style="padding:8px">${dot(e.retorno)}</td>
+        <td style="padding:8px">${dot(e.consulta)}</td>
+      </tr>`;
+    });
+    container.innerHTML = html + `</table>`;
+  } catch (e) {
+    container.innerHTML = "Erro ao carregar dados.";
+  }
+}
+document.addEventListener('DOMContentLoaded', carregarSefaz);

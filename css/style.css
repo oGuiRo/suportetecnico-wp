@@ -16,8 +16,6 @@
 }
 
 /* ── TEMA CLARO ── */
-/* Adicionado no topo para garantir que o navegador leia corretamente. 
-   O uso do :root e .light-mode garante que a barra de rolagem e todo o resto atualizem. */
 :root.light-mode,
 .light-mode {
   --bg-app: #f4f4f5;
@@ -287,20 +285,13 @@ body {
 }
 
 /* ── LAYOUT E SIDEBAR LATERAL ── */
-body {
-  margin: 0;
-  padding: 0;
-  overflow: hidden; /* Evita a rolagem na página inteira, rolando apenas o painel */
-}
-
 .dashboard-layout {
   display: flex;
   height: 100vh;
   width: 100vw;
-  background: var(--bg-body);
+  background: var(--bg-app);
 }
 
-/* O app-container antigo agora ocupa apenas o restante do espaço ao lado da barra */
 .dashboard-layout .app-container {
   flex: 1;
   height: 100vh;
@@ -320,7 +311,7 @@ body {
 }
 
 .sidebar.collapsed {
-  width: 68px; /* Tamanho da barra quando fechada */
+  width: 68px; 
 }
 
 .sidebar-header {
@@ -378,7 +369,6 @@ body {
   color: var(--text-primary);
 }
 
-/* Marca qual aba está aberta no momento */
 .nav-item.active {
   background: rgba(0, 152, 255, 0.1);
   color: #0098ff;
@@ -409,9 +399,104 @@ body {
   display: none;
 }
 
+/* ── COMPONENTES EXCLUSIVOS DO DASHBOARD ── */
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 24px;
+  margin-top: 24px;
+}
+
+.quick-actions {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.action-card {
+  background: var(--bg-app);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 24px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-decoration: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.action-card:hover {
+  border-color: #0098ff;
+  background: rgba(0, 152, 255, 0.05);
+  transform: translateY(-2px);
+}
+
+.action-icon {
+  font-size: 32px;
+  margin-bottom: 12px;
+}
+
+.action-title {
+  color: var(--text-primary);
+  font-weight: 600;
+  font-size: 15px;
+}
+
+.zd-link {
+  display: flex;
+  align-items: center;
+  padding: 12px;
+  color: var(--text-primary);
+  text-decoration: none;
+  border-radius: var(--radius-md);
+  margin-bottom: 8px;
+  background: rgba(136, 146, 164, 0.05);
+  transition: background 0.2s;
+}
+
+.zd-link:hover {
+  background: rgba(0, 152, 255, 0.1);
+}
+
+.showcase-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 24px;
+  margin-bottom: 40px;
+}
+
+.feature-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 32px 24px;
+  transition: all 0.3s ease;
+}
+
+.feature-card:hover {
+  border-color: #0098ff;
+  box-shadow: 0 8px 24px rgba(0, 152, 255, 0.05);
+  transform: translateY(-4px);
+}
+
+.feature-icon-wrapper {
+  width: 56px;
+  height: 56px;
+  background: rgba(0, 152, 255, 0.1);
+  border-radius: var(--radius-lg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  margin-bottom: 20px;
+}
+
 /* ── RESPONSIVIDADE (MOBILE E TABLETS) ── */
 @media (max-width: 850px) {
-  /* 1. Barra Lateral Flutuante */
   .sidebar {
     position: absolute;
     height: 100vh;
@@ -419,18 +504,15 @@ body {
     box-shadow: 4px 0 15px rgba(0,0,0,0.2);
   }
 
-  /* 2. Área Principal ganha espaço */
   .app-container {
-    margin-left: 68px; /* Deixa espaço apenas para a barra quando está fechada */
+    margin-left: 68px; 
     width: calc(100vw - 68px);
   }
 
-  /* 3. Limpeza do Cabeçalho (Oculta itens não essenciais) */
   .credits, .badge-live, .brand-text {
     display: none !important;
   }
 
-  /* 4. Reorganiza o Cabeçalho para empilhar a busca */
   .topbar {
     flex-wrap: wrap;
     padding: 12px 16px;
@@ -438,7 +520,7 @@ body {
     height: auto;
   }
   .search-bar {
-    order: 3; /* Joga a busca para a linha de baixo */
+    order: 3; 
     width: 100%;
     margin-left: 0;
   }
@@ -447,13 +529,11 @@ body {
     justify-content: flex-end;
   }
 
-  /* 5. Painel de Estatísticas do FTP */
   .stats-grid {
-    grid-template-columns: 1fr 1fr; /* 2 colunas ao invés de 4 */
+    grid-template-columns: 1fr 1fr; 
     gap: 12px;
   }
 
-  /* 6. Barra de Ferramentas e Filtros */
   .toolbar {
     flex-direction: column;
     align-items: stretch;
@@ -464,7 +544,6 @@ body {
     justify-content: space-between;
   }
 
-  /* 7. Tabela do FTP com Scroll Horizontal (Não espreme os dados) */
   .table-container {
     overflow-x: auto;
   }
@@ -472,7 +551,6 @@ body {
     min-width: 600px;
   }
 
-  /* 8. Ajustes nas telas de Ferramentas (Validador, Conversor, NFC-e) */
   .content-wrapper {
     margin-top: 20px !important;
     padding: 0 12px;
@@ -480,19 +558,21 @@ body {
   .stat-card {
     padding: 20px !important;
   }
-  /* Força botões e inputs a se empilharem no mobile */
+
   .stat-card div[style*="display: flex; gap: 12px;"] {
     flex-direction: column;
   }
+
+  /* Responsividade específica da Dashboard */
+  .dashboard-grid { grid-template-columns: 1fr; }
+  .quick-actions { grid-template-columns: 1fr; }
 }
 
 @media (max-width: 480px) {
-  /* Em celulares muito pequenos, estatísticas ficam em 1 coluna */
   .stats-grid {
     grid-template-columns: 1fr;
   }
   
-  /* Ajuste fino para não cortar a lateral em telas minúsculas */
   .app-container {
     padding-right: 8px;
   }
