@@ -1156,3 +1156,334 @@ body {
 
 } 
 
+
+  .sefaz-mini-stat .sml {
+    font-size: 10px; font-weight: 600; text-transform: uppercase;
+    letter-spacing: .4px; color: var(--text-secondary); margin-bottom: 3px;
+  }
+  .sefaz-mini-stat .smv {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 17px; font-weight: 500; color: var(--text-primary);
+  }
+  .sefaz-mini-stat .smv.ok   { color: #22c55e; }
+  .sefaz-mini-stat .smv.warn { color: #f59e0b; }
+  .sefaz-mini-stat .smv.err  { color: #ef4444; }
+
+  /* spinner */
+  .sefaz-spinner {
+    width: 28px; height: 28px;
+    border: 3px solid var(--border);
+    border-top-color: #0098ff;
+    border-radius: 50%;
+    animation: sefaz-spin .7s linear infinite;
+  }
+  @keyframes sefaz-spin { to { transform: rotate(360deg); } }
+
+  /* tabela */
+  .sefaz-tbl { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+  .sefaz-tbl thead th {
+    position: sticky; top: 0; z-index: 1;
+    background: var(--bg-card);
+    color: var(--text-secondary);
+    font-weight: 600; font-size: 10.5px;
+    text-transform: uppercase; letter-spacing: .4px;
+    padding: 8px 12px; text-align: left;
+    border-bottom: 1px solid var(--border);
+    white-space: nowrap; cursor: pointer; user-select: none;
+  }
+  .sefaz-tbl thead th:hover { color: var(--text-primary); }
+  .sefaz-tbl tbody tr { border-bottom: 1px solid var(--border); transition: background .12s; }
+  .sefaz-tbl tbody tr:last-child { border-bottom: none; }
+  .sefaz-tbl tbody tr:hover { background: var(--bg-body); }
+  .sefaz-tbl tbody td { padding: 8px 12px; color: var(--text-primary); white-space: nowrap; }
+
+  /* badge */
+  .sz-badge {
+    display: inline-flex; align-items: center; gap: 4px;
+    padding: 2px 8px; border-radius: 999px;
+    font-size: 10.5px; font-weight: 600;
+  }
+  .sz-badge.ok   { background: rgba(34,197,94,.14);  color: #22c55e; }
+  .sz-badge.warn { background: rgba(245,158,11,.14); color: #f59e0b; }
+  .sz-badge.err  { background: rgba(239,68,68,.14);  color: #ef4444; }
+  .sz-dot { width: 5px; height: 5px; border-radius: 50%; flex-shrink: 0; }
+  .sz-dot.ok  { background: #22c55e; }
+  .sz-dot.warn{ background: #f59e0b; }
+  .sz-dot.err { background: #ef4444; }
+
+  /* barra de ping */
+  .sz-bar-wrap { display: flex; align-items: center; gap: 7px; }
+  .sz-bar-bg   { width: 70px; height: 5px; background: var(--border); border-radius: 3px; overflow: hidden; flex-shrink: 0; }
+  .sz-bar-fill { height: 100%; border-radius: 3px; }
+  .sz-ping     { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--text-secondary); min-width: 52px; text-align: right; }
+
+    /* ── Layout base reutilizando variáveis do projeto ── */
+    .sefaz-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .sefaz-header h2 {
+      color: var(--text-primary);
+      font-size: 20px;
+      font-weight: 600;
+      margin: 0;
+    }
+    .sefaz-controls {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .sefaz-controls select,
+    .sefaz-controls input[type="text"] {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      color: var(--text-primary);
+      font-family: 'Inter', sans-serif;
+      font-size: 13px;
+      padding: 6px 10px;
+      outline: none;
+    }
+    .sefaz-controls select:focus,
+    .sefaz-controls input[type="text"]:focus {
+      border-color: #0098ff;
+    }
+    .btn-refresh {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: #0098ff;
+      color: #fff;
+      border: none;
+      border-radius: var(--radius-sm);
+      font-family: 'Inter', sans-serif;
+      font-size: 13px;
+      font-weight: 500;
+      padding: 7px 14px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .btn-refresh:hover { background: #007acc; }
+    .btn-refresh:disabled { background: #555; cursor: not-allowed; }
+    .btn-refresh svg { width: 14px; height: 14px; flex-shrink: 0; }
+
+    /* ── Estatísticas gerais ── */
+    .sefaz-stats-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    .sefaz-stat {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 14px 16px;
+    }
+    .sefaz-stat .label {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--text-secondary);
+      margin-bottom: 6px;
+    }
+    .sefaz-stat .value {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 22px;
+      font-weight: 500;
+      color: var(--text-primary);
+    }
+    .sefaz-stat .value.ok   { color: #22c55e; }
+    .sefaz-stat .value.warn { color: #f59e0b; }
+    .sefaz-stat .value.err  { color: #ef4444; }
+
+    /* ── Tabela de estados ── */
+    .sefaz-table-wrapper {
+      overflow-x: auto;
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+    }
+    table.sefaz-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+    table.sefaz-table thead th {
+      background: var(--bg-card);
+      color: var(--text-secondary);
+      font-weight: 600;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+      padding: 10px 14px;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+      white-space: nowrap;
+      cursor: pointer;
+      user-select: none;
+    }
+    table.sefaz-table thead th:hover { color: var(--text-primary); }
+    table.sefaz-table tbody tr {
+      border-bottom: 1px solid var(--border);
+      transition: background 0.15s;
+    }
+    table.sefaz-table tbody tr:last-child { border-bottom: none; }
+    table.sefaz-table tbody tr:hover { background: var(--bg-body); }
+    table.sefaz-table tbody td {
+      padding: 10px 14px;
+      color: var(--text-primary);
+      white-space: nowrap;
+    }
+
+    /* ── Badge de status ── */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 3px 9px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 600;
+    }
+    .badge-ok   { background: rgba(34,197,94,0.15);  color: #22c55e; }
+    .badge-warn { background: rgba(245,158,11,0.15); color: #f59e0b; }
+    .badge-err  { background: rgba(239,68,68,0.15);  color: #ef4444; }
+    .badge-off  { background: rgba(156,163,175,0.15);color: #9ca3af; }
+    .dot {
+      width: 6px; height: 6px; border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .dot-ok   { background: #22c55e; }
+    .dot-warn { background: #f59e0b; }
+    .dot-err  { background: #ef4444; }
+    .dot-off  { background: #9ca3af; }
+
+    /* ── Barra de tempo de resposta ── */
+    .resp-bar-wrap {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .resp-bar-bg {
+      flex: 1;
+      max-width: 100px;
+      height: 6px;
+      background: var(--border);
+      border-radius: 3px;
+      overflow: hidden;
+    }
+    .resp-bar-fill {
+      height: 100%;
+      border-radius: 3px;
+      transition: width 0.4s;
+    }
+    .resp-val {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      color: var(--text-secondary);
+      min-width: 54px;
+      text-align: right;
+    }
+
+    /* ── Loading / erro ── */
+    .sefaz-loading {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 60px 20px;
+      color: var(--text-secondary);
+      gap: 14px;
+    }
+    .spinner {
+      width: 32px; height: 32px;
+      border: 3px solid var(--border);
+      border-top-color: #0098ff;
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .last-update {
+      font-size: 12px;
+      color: var(--text-secondary);
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    /* ── Tooltip de tipo de documento ── */
+    .doc-types {
+      display: flex;
+      gap: 4px;
+      flex-wrap: wrap;
+    }
+    .doc-chip {
+      font-size: 10px;
+      font-weight: 600;
+      padding: 1px 6px;
+      border-radius: 4px;
+      background: var(--bg-body);
+      border: 1px solid var(--border);
+      color: var(--text-secondary);
+    }
+    .doc-chip.active { border-color: #0098ff; color: #0098ff; }
+  
+    .form-group {
+      margin-bottom: 16px;
+    }
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      color: var(--text-primary);
+      font-weight: 500;
+      font-size: 14px;
+    }
+    .form-group input, .form-group select {
+      width: 100%;
+      padding: 10px 12px;
+      background: var(--bg-body);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      color: var(--text-primary);
+      font-family: 'Inter', sans-serif;
+    }
+    .btn-gerar {
+      width: 100%;
+      padding: 12px;
+      background: #0098ff;
+      color: white;
+      border: none;
+      border-radius: var(--radius-sm);
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    .btn-gerar:hover {
+      background: #007acc;
+    }
+    #qrcode-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 250px;
+      background: #fff;
+      border: 1px dashed var(--border);
+      border-radius: var(--radius-md);
+      padding: 24px;
+      margin-top: 16px;
+    }
+    /* Estilo especial para a caixa da senha */
+    .senha-box {
+      background: var(--bg-body); 
+      border: 2px dashed #0098ff; 
+      border-radius: 8px; 
+      padding: 24px; 
+      display: inline-block; 
+      min-width: 300px;
+      margin-top: 16px;
+    }

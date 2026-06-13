@@ -9,63 +9,6 @@
   <link rel="stylesheet" href="./css/style.css" />
   
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-
-  <style>
-    .form-group {
-      margin-bottom: 16px;
-    }
-    .form-group label {
-      display: block;
-      margin-bottom: 8px;
-      color: var(--text-primary);
-      font-weight: 500;
-      font-size: 14px;
-    }
-    .form-group input, .form-group select {
-      width: 100%;
-      padding: 10px 12px;
-      background: var(--bg-body);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-sm);
-      color: var(--text-primary);
-      font-family: 'Inter', sans-serif;
-    }
-    .btn-gerar {
-      width: 100%;
-      padding: 12px;
-      background: #0098ff;
-      color: white;
-      border: none;
-      border-radius: var(--radius-sm);
-      font-weight: 600;
-      cursor: pointer;
-      transition: 0.2s;
-    }
-    .btn-gerar:hover {
-      background: #007acc;
-    }
-    #qrcode-container {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 250px;
-      background: #fff;
-      border: 1px dashed var(--border);
-      border-radius: var(--radius-md);
-      padding: 24px;
-      margin-top: 16px;
-    }
-    /* Estilo especial para a caixa da senha */
-    .senha-box {
-      background: var(--bg-body); 
-      border: 2px dashed #0098ff; 
-      border-radius: 8px; 
-      padding: 24px; 
-      display: inline-block; 
-      min-width: 300px;
-      margin-top: 16px;
-    }
-  </style>
 </head>
 <body>
 
@@ -111,6 +54,9 @@
         <a href="nfce.html" class="nav-item" title="Roteador NFC-e">
           <div class="nav-icon">🛒</div>
           <span class="nav-text">Consultar NFC-e</span>
+        </a>
+        <a href="monitor-sefaz.html" class="nav-item" title="Monitor SEFAZ">
+        <div class="nav-icon">📡</div><span class="nav-text">Monitor SEFAZ</span>
         </a>
         <a href="https://www.nfe.fazenda.gov.br/portal/consultaRecaptcha.aspx?tipoConsulta=resumo&tipoConteudo=7PhJ%20gAVw2g=" target="_blank" class="nav-item" title="Consultar NF-e">
           <div class="nav-icon">🧾</div>
