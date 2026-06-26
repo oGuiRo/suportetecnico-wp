@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SQL Manager | Centro de Comando</title>
+  <link rel="stylesheet" href="./css/style.css">
+  <style>
+    /* Ajustes específicos do SQL Manager */
+    .sql-editor { width: 100%; min-height: 200px; background: #1e1e1e; color: #d4d4d4; padding: 16px; border-radius: 8px; font-family: 'JetBrains Mono', monospace; resize: vertical; border: 1px solid var(--border); margin-bottom: 16px; }
+    .sql-table { width: 100%; border-collapse: collapse; background: var(--bg-surface); font-size: 13px; }
+    .sql-table th { background: var(--bg-hover); padding: 12px; border: 1px solid var(--border); text-align: left; }
+    .sql-table td { padding: 10px; border: 1px solid var(--border); color: var(--text-secondary); }
+    .btn-exec { background: var(--accent-blue); color: white; border: none; padding: 12px 24px; border-radius: 8px; cursor: pointer; font-weight: 600; }
+  </style>
+</head>
+<body>
+  <div class="dashboard-layout">
+    <aside class="sidebar collapsed" id="sidebar">
+      <div class="sidebar-header"><button class="btn-hamburger" id="sidebar-toggle">☰</button></div>
+      <nav class="sidebar-nav">
+        <a href="index.html" class="nav-item"><div class="nav-icon">🏠</div><span class="nav-text">Início</span></a>
+        <a href="sql.html" class="nav-item active"><div class="nav-icon">🗄️</div><span class="nav-text">SQL Manager</span></a>
+      </nav>
+    </aside>
+
+    <div class="app-container">
+      <header class="topbar"><div class="brand">Centro de Comando</div></header>
+      
+      <main class="main-content">
+        <div class="content-wrapper">
+          <h2 style="margin-bottom: 20px;">🗄️ SQL Manager PostgreSQL</h2>
+          
+          <div class="stat-card" style="padding: 24px;">
+            <div class="sql-form-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin-bottom: 16px;">
+              <input type="text" id="db-host" placeholder="Host" class="custom-select">
+              <input type="text" id="db-port" placeholder="Porta" value="5432" class="custom-select">
+              <input type="text" id="db-name" placeholder="Banco" class="custom-select">
+              <input type="text" id="db-user" placeholder="Usuário" class="custom-select">
+              <input type="password" id="db-pass" placeholder="Senha" class="custom-select">
+            </div>
+            <textarea id="db-query" class="sql-editor" placeholder="Digite seu comando SQL aqui..."></textarea>
+            <button onclick="executarSQL()" class="btn-exec" id="btn-exec">▶ Executar SQL</button>
+          </div>
+
+          <div id="resultado-container" class="table-container" style="margin-top: 24px;"></div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script>
+    async function executarSQL() {
+      const btn = document.getElementById('btn-exec');
+      btn.innerText = 'Executando...';
+      
+      try {
+        const res = await fetch('https://ftp-qualityautomacao-frontend.onrender.com/api/sql', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            host: document.getElementById('db-host').value,
+            port: document.getElementById('db-port').value,
+            database: document.getElementById('db-name').value,
+            user: document.getElementById('db-user').value,
+            password: document.getElementById('db-pass').value,
+            query: document.getElementById('db-query').value
+          })
+        });
+        const data = await res.json();
+        if(data.sucesso) {
+          let html = '<table class="sql-table"><thead><tr>';
+          data.colunas.forEach(c => html += `<th>${c}</th>`);
+          html += '</tr></thead><tbody>';
+          data.linhas.forEach(row => {
+            html += '<tr>';
+            data.colunas.forEach(c => html += `<td>${row[c]}</td>`);
+            html += '</tr>';
+          });
+          document.getElementById('resultado-container').innerHTML = html + '</tbody></table>';
+        } else {
+          alert('Erro: ' + data.erro);
+        }
+      } catch(e) { alert('Falha ao conectar no banco'); } 
+      finally { btn.innerText = '▶ Executar SQL'; }
+    }
+  </script>
+</body>
+</html>
