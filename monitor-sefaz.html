@@ -3,488 +3,171 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Monitor SEFAZ</title>
+  <title>Monitor SEFAZ | Centro de Comando</title>
   <link rel="icon" type="image/png" href="./IMAGES/BrasãoAba.png" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="./css/style.css" />
-  
+  <style>
+    .sefaz-wrapper { max-width: 1200px; margin: 0 auto; }
+    .sefaz-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; margin-top: 24px; }
+    .sf-card { background: var(--bg-surface); border: 1px solid var(--border); border-radius: 8px; padding: 24px; transition: transform 0.2s; }
+    .sf-card:hover { border-color: var(--accent-blue); transform: translateY(-2px); }
+    .sf-header { font-size: 24px; font-weight: 700; color: var(--text-primary); margin-bottom: 20px; border-bottom: 1px solid var(--border); padding-bottom: 12px; text-align: center; }
+    .sf-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; font-size: 14px; color: var(--text-secondary); }
+    .sf-status { display: flex; align-items: center; gap: 8px; font-weight: 600; font-size: 13px; }
+    
+    .dot { width: 12px; height: 12px; border-radius: 50%; }
+    .dot.online { background: #10b981; box-shadow: 0 0 6px rgba(16, 185, 129, 0.4); }
+    .dot.instavel { background: #f59e0b; box-shadow: 0 0 6px rgba(245, 158, 11, 0.4); }
+    .dot.offline { background: #ef4444; box-shadow: 0 0 6px rgba(239, 68, 68, 0.4); }
+    
+    .text-online { color: #10b981; }
+    .text-instavel { color: #f59e0b; }
+    .text-offline { color: #ef4444; }
+
+    .btn-refresh { background: var(--accent-blue); color: white; border: none; padding: 12px 24px; border-radius: 8px; cursor: pointer; font-weight: 600; display: inline-flex; align-items: center; transition: 0.2s; }
+    .btn-refresh:hover { background: #007acc; }
+    .header-flex { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 16px; }
+  </style>
 </head>
 <body>
-<div class="dashboard-layout">
+  <div class="dashboard-layout">
+    <aside class="sidebar collapsed" id="sidebar">
+      <div class="sidebar-header"><button class="btn-hamburger" id="sidebar-toggle">☰</button></div>
+      <nav class="sidebar-nav">
+        <a href="index.html" class="nav-item"><div class="nav-icon">🏠</div><span class="nav-text">Início</span></a>
+        <a href="ftp.html" class="nav-item"><div class="nav-icon">📁</div><span class="nav-text">FTP Quality</span></a>
+        <a href="validador.html" class="nav-item"><div class="nav-icon">&lt;/&gt;</div><span class="nav-text">Validador XML</span></a>
+        <a href="conversor.html" class="nav-item"><div class="nav-icon">🔐</div><span class="nav-text">Conversor PFX</span></a>
+        <a href="gerador-pay.html" class="nav-item"><div class="nav-icon">📱</div><span class="nav-text">Configurador PAY</span></a>
+        <a href="monitor-sefaz.html" class="nav-item active"><div class="nav-icon">📡</div><span class="nav-text">Monitor Sefaz</span></a>
+      </nav>
+    </aside>
 
-  <!-- ── Sidebar ── -->
-  <aside class="sidebar collapsed" id="sidebar">
-    <div class="sidebar-header">
-      <button class="btn-hamburger" id="sidebar-toggle" title="Expandir/Recolher Menu">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <line x1="3" y1="12" x2="21" y2="12"></line>
-          <line x1="3" y1="6"  x2="21" y2="6"></line>
-          <line x1="3" y1="18" x2="21" y2="18"></line>
-        </svg>
-      </button>
-    </div>
-    <nav class="sidebar-nav">
-      <a href="index.html"     class="nav-item" title="Início / Dashboard">
-        <div class="nav-icon">🏠</div><span class="nav-text">Início</span>
-      </a>
-      <a href="ftp.html"       class="nav-item" title="Arquivos FTP Quality">
-        <div class="nav-icon">📁</div><span class="nav-text">FTP Quality</span>
-      </a>
-      <a href="validador.html" class="nav-item" title="Validador XML/JSON">
-        <div class="nav-icon">&lt;/&gt;</div><span class="nav-text">Validador XML/JSON</span>
-      </a>
-      <a href="conversor.html" class="nav-item" title="Conversor PFX">
-        <div class="nav-icon">🔐</div><span class="nav-text">Conversor PFX</span>
-      </a>
-      <a href="gerador-pay.html" class="nav-item" title="Gerador de QR Code PAY">
-        <div class="nav-icon">📱</div><span class="nav-text">Configurador PAY</span>
-      </a>
-      <div style="height:1px;background:var(--border);margin:12px 16px;"></div>
-      <div style="margin:4px 16px 8px;font-size:11px;font-weight:600;color:var(--text-secondary);text-transform:uppercase;letter-spacing:0.5px;">
-        <span class="nav-text">Sefaz / Externo</span>
-      </div>
-      <a href="nfce.html"    class="nav-item" title="Roteador NFC-e">
-        <div class="nav-icon">🛒</div><span class="nav-text">Consultar NFC-e</span>
-      </a>
-      <a href="monitor-sefaz.html" class="nav-item active" title="Monitor SEFAZ">
-        <div class="nav-icon">📡</div><span class="nav-text">Monitor SEFAZ</span>
-      </a>
-      <a href="https://www.nfe.fazenda.gov.br/portal/consultaRecaptcha.aspx?tipoConsulta=resumo&tipoConteudo=7PhJ%20gAVw2g=" target="_blank" class="nav-item" title="Consultar NF-e">
-        <div class="nav-icon">🧾</div><span class="nav-text">Consultar NF-e</span>
-      </a>
-      <a href="https://www.cte.fazenda.gov.br/portal/consultaRecaptcha.aspx?tipoConsulta=completa&tipoConteudo=mCK/KoCqru0=" target="_blank" class="nav-item" title="Consultar CT-e">
-        <div class="nav-icon">📦</div><span class="nav-text">Consultar CT-e</span>
-      </a>
-      <a href="https://dfe-portal.svrs.rs.gov.br/Mdfe/Consulta" target="_blank" class="nav-item" title="Consultar MDF-e">
-        <div class="nav-icon">🚛</div><span class="nav-text">Consultar MDF-e</span>
-      </a>
-    </nav>
-  </aside>
-
-  <div class="app-container">
-    <!-- ── Topbar ── -->
-    <header class="topbar">
-      <div class="brand" onclick="window.location.href='index.html'" style="cursor:pointer;" title="Voltar para o Início">
-        <div class="brand-icon"><img id="brand-logo" src="./IMAGES/LogoPreta_WP.png" alt="Logotipo" /></div>
-        <div class="brand-text">Centro de Comando</div>
-      </div>
-      <div class="topbar-actions">
-        <div class="credits">Desenvolvido por <strong>Guilherme Rodrigues</strong></div>
-        <button id="theme-toggle" class="btn-icon" title="Alternar tema">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="12" cy="12" r="5"></circle>
-            <line x1="12" y1="1"  x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line>
-            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
-            <line x1="1" y1="12"  x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line>
-            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
-          </svg>
-        </button>
-      </div>
-    </header>
-
-    <!-- ── Conteúdo principal ── -->
-    <main class="main-content">
-      <div class="content-wrapper" style="max-width:1300px;">
-
-        <div class="sefaz-header">
-          <div>
-            <h2>📡 Monitor SEFAZ — Tempo de Resposta por Estado</h2>
-            <span class="last-update" id="last-update">Aguardando primeira consulta…</span>
-          </div>
-          <div class="sefaz-controls">
-            <input type="text" id="search-uf" placeholder="🔍 Filtrar estado…" style="width:160px;" />
-            <select id="filter-doc">
-              <option value="">Todos os documentos</option>
-              <option value="NFe">NF-e</option>
-              <option value="NFCe">NFC-e</option>
-              <option value="CTe">CT-e</option>
-              <option value="MDFe">MDF-e</option>
-              <option value="DCe">DC-e</option>
-            </select>
-            <select id="filter-status">
-              <option value="">Todos os status</option>
-              <option value="ok">Operacional</option>
-              <option value="warn">Lento</option>
-              <option value="err">Indisponível</option>
-            </select>
-            <button class="btn-refresh" id="btn-refresh" onclick="fetchSefaz()">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                <polyline points="23 4 23 10 17 10"></polyline>
-                <polyline points="1 20 1 14 7 14"></polyline>
-                <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
-              </svg>
-              Atualizar
+    <div class="app-container">
+      <header class="topbar">
+        <div class="brand" onclick="window.location.href='index.html'" style="cursor:pointer;">
+          <div class="brand-icon"><img id="brand-logo" src="./IMAGES/LogoPreta_WP.png" alt="Logotipo" /></div>
+          <div class="brand-text">Centro de Comando</div>
+        </div>
+        <div class="topbar-actions"><button id="theme-toggle" class="btn-icon">☀️</button></div>
+      </header>
+      
+      <main class="main-content">
+        <div class="sefaz-wrapper">
+          <div class="header-flex">
+            <div>
+              <h2 style="color: var(--text-primary); margin-bottom: 8px;">📡 Status Nacional SEFAZ</h2>
+              <p style="color: var(--text-secondary); font-size: 14px;">Monitoramento oficial (NF-e, NFC-e e Retornos).</p>
+            </div>
+            <button id="btn-atualizar" class="btn-refresh" onclick="carregarSefaz()">
+              ↻ Atualizar Status
             </button>
           </div>
-        </div>
 
-        <!-- Estatísticas rápidas -->
-        <div class="sefaz-stats-row" id="stats-row">
-          <div class="sefaz-stat"><div class="label">Estados monitorados</div><div class="value" id="st-total">—</div></div>
-          <div class="sefaz-stat"><div class="label">Operacionais</div><div class="value ok" id="st-ok">—</div></div>
-          <div class="sefaz-stat"><div class="label">Lentos / Atenção</div><div class="value warn" id="st-warn">—</div></div>
-          <div class="sefaz-stat"><div class="label">Indisponíveis</div><div class="value err" id="st-err">—</div></div>
-          <div class="sefaz-stat"><div class="label">Tempo médio</div><div class="value" id="st-avg">—</div></div>
-          <div class="sefaz-stat"><div class="label">Mais rápido</div><div class="value ok" id="st-best">—</div></div>
-          <div class="sefaz-stat"><div class="label">Mais lento</div><div class="value warn" id="st-worst">—</div></div>
-        </div>
-
-        <!-- Área da tabela -->
-        <div class="stat-card" style="padding:0;overflow:hidden;">
-          <div id="table-area">
-            <div class="sefaz-loading" id="loading-msg">
-              <div class="spinner"></div>
-              <span>Consultando serviços da SEFAZ…</span>
-            </div>
+          <div id="status-msg" style="font-size: 13px; color: var(--text-muted); margin-bottom: 16px;"></div>
+          
+          <div id="sefaz-grid" class="sefaz-grid">
+            <!-- Cards gerados pelo JavaScript -->
           </div>
         </div>
-
-        <p style="font-size:12px;color:var(--text-secondary);margin-top:14px;">
-          ⚠️ Os dados são obtidos diretamente de <a href="https://monitorsefaz.com.br" target="_blank" style="color:#0098ff;">monitorsefaz.com.br</a>.
-          Os tempos de resposta refletem o momento exato da consulta. Atualização automática a cada <strong>2 minutos</strong>.
-        </p>
-
-      </div>
-    </main>
+      </main>
+    </div>
   </div>
-</div>
 
-<script src="./js/dashboard.js"></script>
-<script>
-/* ═══════════════════════════════════════════════════════════
-   Monitor SEFAZ — script de automação
-   Fonte: API pública de monitorsefaz.com.br
-   ═══════════════════════════════════════════════════════════ */
-
-// ── Configurações ──────────────────────────────────────────
-const API_URL      = 'https://monitorsefaz.com.br/api/status';  // endpoint principal
-const API_FALLBACK = 'https://monitorsefaz.com.br/api/services'; // fallback
-const REFRESH_MS   = 2 * 60 * 1000; // 2 minutos
-const RESP_WARN_MS = 1500;  // ms acima disto → lento
-const RESP_ERR_MS  = 5000;  // ms acima disto → crítico
-
-// Dados estáticos dos estados (fallback quando a API não retorna sigla)
-const UF_NAMES = {
-  AC:'Acre',AM:'Amazonas',AP:'Amapá',PA:'Pará',RO:'Rondônia',RR:'Roraima',TO:'Tocantins',
-  AL:'Alagoas',BA:'Bahia',CE:'Ceará',MA:'Maranhão',PB:'Paraíba',PE:'Pernambuco',
-  PI:'Piauí',RN:'Rio Grande do Norte',SE:'Sergipe',
-  DF:'Distrito Federal',GO:'Goiás',MS:'Mato Grosso do Sul',MT:'Mato Grosso',
-  ES:'Espírito Santo',MG:'Minas Gerais',RJ:'Rio de Janeiro',SP:'São Paulo',
-  PR:'Paraná',RS:'Rio Grande do Sul',SC:'Santa Catarina',
-  AN:'Ambiente Nacional',
-};
-
-// Variáveis de estado
-let allRows    = [];
-let sortCol    = 'uf';
-let sortAsc    = true;
-let autoTimer  = null;
-
-// ── Utilitários ────────────────────────────────────────────
-function statusOf(ms, online) {
-  if (!online || ms === null || ms === undefined) return 'err';
-  if (ms >= RESP_ERR_MS)  return 'err';
-  if (ms >= RESP_WARN_MS) return 'warn';
-  return 'ok';
-}
-function statusLabel(s) {
-  return { ok:'Operacional', warn:'Lento', err:'Indisponível', off:'Desconhecido' }[s] ?? s;
-}
-function fmtMs(ms) {
-  if (ms === null || ms === undefined) return '—';
-  return ms + ' ms';
-}
-function barColor(s) {
-  return { ok:'#22c55e', warn:'#f59e0b', err:'#ef4444', off:'#6b7280' }[s] ?? '#6b7280';
-}
-function barWidth(ms) {
-  if (!ms) return 0;
-  return Math.min(100, (ms / RESP_ERR_MS) * 100);
-}
-function nowStr() {
-  return new Date().toLocaleTimeString('pt-BR', { hour:'2-digit', minute:'2-digit', second:'2-digit' });
-}
-
-// ── Normalização dos dados da API ──────────────────────────
-// A API do monitorsefaz pode retornar estruturas variadas.
-// Esta função tenta mapear ao máximo os campos conhecidos.
-function normalizeRows(data) {
-  let items = [];
-
-  if (Array.isArray(data)) {
-    items = data;
-  } else if (data && typeof data === 'object') {
-    // tenta achar array dentro de propriedades comuns
-    const possibleKeys = ['services','states','data','status','results','items'];
-    for (const k of possibleKeys) {
-      if (Array.isArray(data[k])) { items = data[k]; break; }
+  <script src="./js/dashboard.js"></script>
+  <script>
+    function renderStatus(status) {
+      let texto = 'Fora do Ar';
+      let classe = 'offline';
+      
+      if(status === 'online') { texto = 'Normal'; classe = 'online'; }
+      else if(status === 'instavel') { texto = 'Instável'; classe = 'instavel'; }
+      
+      return `
+        <div class="sf-status">
+          <div class="dot ${classe}"></div>
+          <span class="text-${classe}">${texto}</span>
+        </div>
+      `;
     }
-    // se ainda vazio, tenta transformar objeto chave→objeto
-    if (!items.length) {
-      items = Object.entries(data).map(([k, v]) =>
-        typeof v === 'object' ? { uf: k, ...v } : { uf: k, responseTime: v }
-      );
-    }
-  }
 
-  return items.map(item => {
-    // normaliza sigla do estado
-    const uf = (item.uf || item.state || item.sigla || item.codigo || item.code || '??')
-      .toString().toUpperCase().trim();
-
-    // nome do estado
-    const name = item.name || item.nome || item.estado || UF_NAMES[uf] || uf;
-
-    // tempo de resposta (tenta vários campos)
-    const rawMs =
-      item.responseTime ?? item.response_time ?? item.tempo ?? item.latency
-      ?? item.ms ?? item.time ?? null;
-    const ms = rawMs !== null ? Math.round(Number(rawMs)) : null;
-
-    // online/status
-    const rawOnline = item.online ?? item.ativo ?? item.active ?? item.available ?? item.up;
-    const online = rawOnline !== undefined
-      ? Boolean(rawOnline)
-      : (ms !== null && ms < RESP_ERR_MS);
-
-    // tipo de documento (NFe, NFCe, CTe, MDFe, DCe)
-    const docs = item.docs || item.documentos || item.services || item.tipos || [];
-
-    // serviço / ambiente
-    const service = item.service || item.servico || item.ambiente || '';
-
-    const s = statusOf(ms, online);
-
-    return { uf, name, ms, online, status: s, docs, service };
-  }).filter(r => r.uf !== '??');
-}
-
-// ── Busca na API ───────────────────────────────────────────
-async function fetchSefaz() {
-  const btn = document.getElementById('btn-refresh');
-  btn.disabled = true;
-  btn.innerHTML = `
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
-         stroke-linecap="round" stroke-linejoin="round" style="animation:spin .7s linear infinite;width:14px;height:14px;">
-      <polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline>
-      <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
-    </svg> Consultando…`;
-
-  showLoading();
-
-  try {
-    let data = null;
-
-    // Tenta endpoint principal com timeout de 10s
-    try {
-      const ctrl = new AbortController();
-      const tid  = setTimeout(() => ctrl.abort(), 10000);
-      const res  = await fetch(API_URL, {
-        signal: ctrl.signal,
-        headers: { 'Accept': 'application/json', 'Cache-Control': 'no-cache' }
-      });
-      clearTimeout(tid);
-      if (res.ok) data = await res.json();
-    } catch (_) { /* tenta fallback */ }
-
-    // Fallback
-    if (!data) {
+    async function carregarSefaz() {
+      const btn = document.getElementById('btn-atualizar');
+      const grid = document.getElementById('sefaz-grid');
+      const msg = document.getElementById('status-msg');
+      
+      btn.innerText = '↻ Buscando...';
+      btn.disabled = true;
+      grid.innerHTML = '';
+      msg.innerText = 'Consultando Portal Oficial da Nota Fiscal Eletrônica...';
+      
       try {
-        const ctrl = new AbortController();
-        const tid  = setTimeout(() => ctrl.abort(), 10000);
-        const res  = await fetch(API_FALLBACK, { signal: ctrl.signal });
-        clearTimeout(tid);
-        if (res.ok) data = await res.json();
-      } catch (_) { /* falhou também */ }
-    }
+        // Usamos um Proxy CORS público para que o SEU navegador consiga ler o site da SEFAZ
+        // Isso burla o bloqueio de IP que o governo coloca em servidores de nuvem como o Render.
+        const urlSefaz = encodeURIComponent('http://www.nfe.fazenda.gov.br/portal/disponibilidade.aspx');
+        const res = await fetch(`https://api.allorigins.win/get?url=${urlSefaz}`);
+        const data = await res.json();
+        
+        if(!data.contents) throw new Error('Falha ao ler Sefaz');
 
-    // Se ambos falharam, usa dados demo enriquecidos
-    if (!data) {
-      data = buildDemoData();
-      showError('API inacessível — exibindo dados de demonstração (estrutura real preservada).');
-    }
+        // Transforma o texto do site da Sefaz em HTML que podemos ler
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(data.contents, 'text/html');
+        
+        // Pega as linhas da tabela oficial
+        const linhas = doc.querySelectorAll('table.tabelaListagemDados tbody tr');
+        if(linhas.length === 0) throw new Error('Tabela vazia');
 
-    allRows = normalizeRows(data);
+        msg.innerText = 'Última atualização: ' + new Date().toLocaleTimeString();
+        let html = '';
+        
+        linhas.forEach((linha, i) => {
+          if (i === 0) return; // Pula o cabeçalho
+          
+          const colunas = linha.querySelectorAll('td');
+          if (colunas.length < 5) return;
 
-    if (!allRows.length) {
-      // Caso a API retorne algo inesperado
-      allRows = normalizeRows(buildDemoData());
-      showError('Formato de resposta inesperado — exibindo dados de demonstração.');
-    }
+          const autorizador = colunas[0].innerText.trim();
+          
+          // Função interna para ver se a imagem da sefaz é verde, amarela ou vermelha
+          const getStatus = (td) => {
+            const img = td.querySelector('img');
+            const src = img ? img.getAttribute('src') : '';
+            if(src.includes('verde')) return 'online';
+            if(src.includes('amarela')) return 'instavel';
+            return 'offline';
+          };
 
-    updateStats();
-    renderTable();
-    document.getElementById('last-update').textContent =
-      `Última atualização: ${nowStr()}`;
-
-  } catch (err) {
-    showError('Erro ao consultar SEFAZ: ' + err.message);
-  } finally {
-    btn.disabled = false;
-    btn.innerHTML = `
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
-           stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px;">
-        <polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline>
-        <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
-      </svg> Atualizar`;
-  }
-}
-
-// ── Dados de demonstração (todos os estados) ───────────────
-function buildDemoData() {
-  const ufs = Object.keys(UF_NAMES);
-  // Simula variação realista nos tempos de resposta
-  return ufs.map(uf => {
-    const base = 200 + Math.random() * 2800;
-    const ms   = Math.round(base);
-    return {
-      uf,
-      name: UF_NAMES[uf],
-      responseTime: ms,
-      online: ms < 5000,
-      docs: ['NFe', 'NFCe'],
-      service: 'Autorização',
-    };
-  });
-}
-
-// ── Estatísticas ───────────────────────────────────────────
-function updateStats() {
-  const ok   = allRows.filter(r => r.status === 'ok').length;
-  const warn = allRows.filter(r => r.status === 'warn').length;
-  const err  = allRows.filter(r => r.status === 'err').length;
-  const withMs = allRows.filter(r => r.ms !== null);
-  const avg  = withMs.length
-    ? Math.round(withMs.reduce((a, r) => a + r.ms, 0) / withMs.length) : null;
-  const best  = withMs.length ? Math.min(...withMs.map(r => r.ms)) : null;
-  const worst = withMs.length ? Math.max(...withMs.map(r => r.ms)) : null;
-
-  document.getElementById('st-total').textContent = allRows.length;
-  document.getElementById('st-ok').textContent    = ok;
-  document.getElementById('st-warn').textContent  = warn;
-  document.getElementById('st-err').textContent   = err;
-  document.getElementById('st-avg').textContent   = fmtMs(avg);
-  document.getElementById('st-best').textContent  = fmtMs(best);
-  document.getElementById('st-worst').textContent = fmtMs(worst);
-}
-
-// ── Render da tabela ───────────────────────────────────────
-function renderTable() {
-  const search   = document.getElementById('search-uf').value.toLowerCase().trim();
-  const filterDoc= document.getElementById('filter-doc').value;
-  const filterSt = document.getElementById('filter-status').value;
-
-  let rows = allRows.filter(r => {
-    if (search && !r.uf.toLowerCase().includes(search) && !r.name.toLowerCase().includes(search)) return false;
-    if (filterDoc && !r.docs.some(d => d.replace(/[-\s]/g,'').toLowerCase() === filterDoc.toLowerCase())) return false;
-    if (filterSt && r.status !== filterSt) return false;
-    return true;
-  });
-
-  // Ordenação
-  rows = rows.sort((a, b) => {
-    let va = a[sortCol], vb = b[sortCol];
-    if (sortCol === 'ms') {
-      va = va ?? Infinity; vb = vb ?? Infinity;
-      return sortAsc ? va - vb : vb - va;
-    }
-    va = (va ?? '').toString().toLowerCase();
-    vb = (vb ?? '').toString().toLowerCase();
-    return sortAsc ? va.localeCompare(vb) : vb.localeCompare(va);
-  });
-
-  if (!rows.length) {
-    document.getElementById('table-area').innerHTML =
-      `<div class="sefaz-loading"><span>Nenhum resultado encontrado para os filtros aplicados.</span></div>`;
-    return;
-  }
-
-  const arrow = col => col === sortCol ? (sortAsc ? ' ↑' : ' ↓') : '';
-
-  const html = `
-  <div class="sefaz-table-wrapper">
-    <table class="sefaz-table">
-      <thead>
-        <tr>
-          <th onclick="setSort('uf')"     >UF${arrow('uf')}</th>
-          <th onclick="setSort('name')"   >Estado${arrow('name')}</th>
-          <th onclick="setSort('status')" >Status${arrow('status')}</th>
-          <th onclick="setSort('ms')"     >Tempo de Resposta${arrow('ms')}</th>
-          <th>Documentos</th>
-          <th>Serviço</th>
-        </tr>
-      </thead>
-      <tbody>
-        ${rows.map(r => `
-          <tr>
-            <td><strong style="font-family:'JetBrains Mono',monospace;">${r.uf}</strong></td>
-            <td>${r.name}</td>
-            <td>
-              <span class="badge badge-${r.status}">
-                <span class="dot dot-${r.status}"></span>
-                ${statusLabel(r.status)}
-              </span>
-            </td>
-            <td>
-              <div class="resp-bar-wrap">
-                <div class="resp-bar-bg">
-                  <div class="resp-bar-fill"
-                       style="width:${barWidth(r.ms)}%;background:${barColor(r.status)};"></div>
-                </div>
-                <span class="resp-val">${fmtMs(r.ms)}</span>
+          html += `
+            <div class="sf-card">
+              <div class="sf-header">${autorizador}</div>
+              <div class="sf-row">
+                <span>Autorização</span>
+                ${renderStatus(getStatus(colunas[1]))}
               </div>
-            </td>
-            <td>
-              <div class="doc-types">
-                ${['NFe','NFCe','CTe','MDFe','DCe'].map(d =>
-                  `<span class="doc-chip${r.docs.some(x=>x.replace(/[-\s]/g,'').toLowerCase()===d.toLowerCase())?' active':''}">${d}</span>`
-                ).join('')}
+              <div class="sf-row">
+                <span>Retorno de Lot.</span>
+                ${renderStatus(getStatus(colunas[2]))}
               </div>
-            </td>
-            <td style="color:var(--text-secondary);font-size:12px;">${r.service || '—'}</td>
-          </tr>
-        `).join('')}
-      </tbody>
-    </table>
-  </div>`;
+              <div class="sf-row">
+                <span>Consulta Cadastro</span>
+                ${renderStatus(getStatus(colunas[4]))}
+              </div>
+            </div>
+          `;
+        });
+        
+        grid.innerHTML = html;
+      } catch(e) {
+        msg.innerHTML = '<span style="color: #ef4444;">Falha ao obter dados. O portal da SEFAZ está bloqueando a requisição no momento.</span>';
+      } finally {
+        btn.innerText = '↻ Atualizar Status';
+        btn.disabled = false;
+      }
+    }
 
-  document.getElementById('table-area').innerHTML = html;
-}
-
-function setSort(col) {
-  if (sortCol === col) sortAsc = !sortAsc;
-  else { sortCol = col; sortAsc = true; }
-  renderTable();
-}
-
-function showLoading() {
-  document.getElementById('table-area').innerHTML =
-    `<div class="sefaz-loading"><div class="spinner"></div><span>Consultando serviços da SEFAZ…</span></div>`;
-}
-
-function showError(msg) {
-  // Mantém a tabela se já existir; só adiciona aviso acima
-  const existing = document.getElementById('table-area').querySelector('table.sefaz-table');
-  if (!existing) {
-    document.getElementById('table-area').innerHTML =
-      `<div class="sefaz-loading">
-        <span style="color:#ef4444;">⚠ ${msg}</span>
-        <span style="font-size:12px;color:var(--text-secondary);">
-          Verifique sua conexão ou acesse
-          <a href="https://monitorsefaz.com.br" target="_blank" style="color:#0098ff;">monitorsefaz.com.br</a> diretamente.
-        </span>
-      </div>`;
-  }
-}
-
-// ── Filtros em tempo real ──────────────────────────────────
-document.getElementById('search-uf').addEventListener('input',    renderTable);
-document.getElementById('filter-doc').addEventListener('change',  renderTable);
-document.getElementById('filter-status').addEventListener('change', renderTable);
-
-// ── Inicialização e auto-refresh ───────────────────────────
-fetchSefaz();
-autoTimer = setInterval(fetchSefaz, REFRESH_MS);
-</script>
+    carregarSefaz();
+  </script>
 </body>
 </html>

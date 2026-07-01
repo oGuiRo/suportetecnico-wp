@@ -6,12 +6,20 @@
   <title>SQL Manager | Centro de Comando</title>
   <link rel="stylesheet" href="./css/style.css">
   <style>
-    /* Ajustes específicos do SQL Manager */
-    .sql-editor { width: 100%; min-height: 200px; background: #1e1e1e; color: #d4d4d4; padding: 16px; border-radius: 8px; font-family: 'JetBrains Mono', monospace; resize: vertical; border: 1px solid var(--border); margin-bottom: 16px; }
-    .sql-table { width: 100%; border-collapse: collapse; background: var(--bg-surface); font-size: 13px; }
-    .sql-table th { background: var(--bg-hover); padding: 12px; border: 1px solid var(--border); text-align: left; }
-    .sql-table td { padding: 10px; border: 1px solid var(--border); color: var(--text-secondary); }
-    .btn-exec { background: var(--accent-blue); color: white; border: none; padding: 12px 24px; border-radius: 8px; cursor: pointer; font-weight: 600; }
+    .client-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; margin-top: 20px; }
+    .client-card { background: var(--bg-surface); border: 1px solid var(--border); border-radius: 8px; padding: 20px; transition: transform 0.2s; display: flex; flex-direction: column; justify-content: space-between; }
+    .client-card:hover { border-color: var(--accent-blue); transform: translateY(-2px); }
+    .client-title { font-weight: 600; font-size: 16px; margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
+    .client-url { font-size: 13px; color: var(--text-secondary); margin-bottom: 16px; font-family: 'JetBrains Mono', monospace; }
+    .btn-open { background: var(--accent-blue); color: white; border: none; padding: 10px; border-radius: 6px; cursor: pointer; font-weight: 600; text-align: center; text-decoration: none; display: block; }
+    .btn-open:hover { opacity: 0.9; }
+    .btn-delete { background: transparent; color: #ef4444; border: 1px solid #ef4444; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-size: 12px; margin-top: 12px; align-self: flex-end; }
+    .btn-delete:hover { background: #ef4444; color: white; }
+    
+    .add-form { display: flex; gap: 12px; margin-bottom: 24px; align-items: flex-end; flex-wrap: wrap; }
+    .form-group { display: flex; flex-direction: column; gap: 6px; flex: 1; min-width: 200px; }
+    .form-group label { font-size: 13px; color: var(--text-secondary); font-weight: 500; }
+    .add-btn { background: #10b981; color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; font-weight: 600; height: 40px; }
   </style>
 </head>
 <body>
@@ -20,70 +28,105 @@
       <div class="sidebar-header"><button class="btn-hamburger" id="sidebar-toggle">☰</button></div>
       <nav class="sidebar-nav">
         <a href="index.html" class="nav-item"><div class="nav-icon">🏠</div><span class="nav-text">Início</span></a>
+        <a href="ftp.html" class="nav-item"><div class="nav-icon">📁</div><span class="nav-text">FTP Quality</span></a>
+        <a href="validador.html" class="nav-item"><div class="nav-icon">&lt;/&gt;</div><span class="nav-text">Validador XML</span></a>
+        <a href="conversor.html" class="nav-item"><div class="nav-icon">🔐</div><span class="nav-text">Conversor PFX</span></a>
+        <a href="gerador-pay.html" class="nav-item"><div class="nav-icon">📱</div><span class="nav-text">Configurador PAY</span></a>
         <a href="sql.html" class="nav-item active"><div class="nav-icon">🗄️</div><span class="nav-text">SQL Manager</span></a>
       </nav>
     </aside>
 
     <div class="app-container">
-      <header class="topbar"><div class="brand">Centro de Comando</div></header>
+      <header class="topbar">
+        <div class="brand">Centro de Comando</div>
+        <div class="topbar-actions"><button id="theme-toggle" class="btn-icon">☀️</button></div>
+      </header>
       
       <main class="main-content">
-        <div class="content-wrapper">
-          <h2 style="margin-bottom: 20px;">🗄️ SQL Manager PostgreSQL</h2>
-          
+        <div class="content-wrapper" style="max-width: 1200px;">
+          <h2 style="margin-bottom: 8px;">🗄️ Hub CloudBeaver</h2>
+          <p style="color: var(--text-secondary); font-size: 14px; margin-bottom: 24px;">
+            Gerencie os acessos aos bancos de dados locais dos clientes. Requer o CloudBeaver rodando no servidor de destino.
+          </p>
+
           <div class="stat-card" style="padding: 24px;">
-            <div class="sql-form-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin-bottom: 16px;">
-              <input type="text" id="db-host" placeholder="Host" class="custom-select">
-              <input type="text" id="db-port" placeholder="Porta" value="5432" class="custom-select">
-              <input type="text" id="db-name" placeholder="Banco" class="custom-select">
-              <input type="text" id="db-user" placeholder="Usuário" class="custom-select">
-              <input type="password" id="db-pass" placeholder="Senha" class="custom-select">
+            <h3 style="margin-bottom: 16px;">Adicionar Novo Cliente</h3>
+            <div class="add-form">
+              <div class="form-group">
+                <label>Nome do Cliente / Posto</label>
+                <input type="text" id="cli-nome" class="custom-select" placeholder="Ex: Posto Ipiranga Centro">
+              </div>
+              <div class="form-group">
+                <label>IP / URL do CloudBeaver</label>
+                <input type="text" id="cli-url" class="custom-select" placeholder="Ex: 192.168.1.100:8978">
+              </div>
+              <button onclick="adicionarCliente()" class="add-btn">➕ Salvar Cliente</button>
             </div>
-            <textarea id="db-query" class="sql-editor" placeholder="Digite seu comando SQL aqui..."></textarea>
-            <button onclick="executarSQL()" class="btn-exec" id="btn-exec">▶ Executar SQL</button>
           </div>
 
-          <div id="resultado-container" class="table-container" style="margin-top: 24px;"></div>
+          <div id="clients-container" class="client-grid">
+            </div>
+
         </div>
       </main>
     </div>
   </div>
 
+  <script src="./js/dashboard.js"></script>
   <script>
-    async function executarSQL() {
-      const btn = document.getElementById('btn-exec');
-      btn.innerText = 'Executando...';
+    // Gerenciamento de clientes salvos no localStorage
+    function carregarClientes() {
+      const clientes = JSON.parse(localStorage.getItem('cloudbeaver_clients')) || [];
+      const container = document.getElementById('clients-container');
       
-      try {
-        const res = await fetch('https://ftp-qualityautomacao-frontend.onrender.com/api/sql', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            host: document.getElementById('db-host').value,
-            port: document.getElementById('db-port').value,
-            database: document.getElementById('db-name').value,
-            user: document.getElementById('db-user').value,
-            password: document.getElementById('db-pass').value,
-            query: document.getElementById('db-query').value
-          })
-        });
-        const data = await res.json();
-        if(data.sucesso) {
-          let html = '<table class="sql-table"><thead><tr>';
-          data.colunas.forEach(c => html += `<th>${c}</th>`);
-          html += '</tr></thead><tbody>';
-          data.linhas.forEach(row => {
-            html += '<tr>';
-            data.colunas.forEach(c => html += `<td>${row[c]}</td>`);
-            html += '</tr>';
-          });
-          document.getElementById('resultado-container').innerHTML = html + '</tbody></table>';
-        } else {
-          alert('Erro: ' + data.erro);
-        }
-      } catch(e) { alert('Falha ao conectar no banco'); } 
-      finally { btn.innerText = '▶ Executar SQL'; }
+      if(clientes.length === 0) {
+        container.innerHTML = `<div style="color: var(--text-muted); grid-column: 1/-1;">Nenhum cliente cadastrado ainda.</div>`;
+        return;
+      }
+
+      container.innerHTML = clientes.map((cli, index) => `
+        <div class="client-card">
+          <div>
+            <div class="client-title">🐋 ${cli.nome}</div>
+            <div class="client-url">http://${cli.url.replace('http://', '')}</div>
+          </div>
+          <div style="display: flex; flex-direction: column;">
+            <a href="http://${cli.url.replace('http://', '')}" target="_blank" class="btn-open">Abrir CloudBeaver ↗</a>
+            <button onclick="removerCliente(${index})" class="btn-delete">Remover</button>
+          </div>
+        </div>
+      `).join('');
     }
+
+    function adicionarCliente() {
+      const nome = document.getElementById('cli-nome').value.trim();
+      const url = document.getElementById('cli-url').value.trim();
+      
+      if(!nome || !url) {
+        alert("Preencha o nome e o IP/URL!");
+        return;
+      }
+
+      const clientes = JSON.parse(localStorage.getItem('cloudbeaver_clients')) || [];
+      clientes.push({ nome, url });
+      localStorage.setItem('cloudbeaver_clients', JSON.stringify(clientes));
+      
+      document.getElementById('cli-nome').value = '';
+      document.getElementById('cli-url').value = '';
+      carregarClientes();
+    }
+
+    function removerCliente(index) {
+      if(confirm("Tem certeza que deseja remover este atalho?")) {
+        const clientes = JSON.parse(localStorage.getItem('cloudbeaver_clients')) || [];
+        clientes.splice(index, 1);
+        localStorage.setItem('cloudbeaver_clients', JSON.stringify(clientes));
+        carregarClientes();
+      }
+    }
+
+    // Carrega a lista assim que a página abre
+    carregarClientes();
   </script>
 </body>
 </html>
